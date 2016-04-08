@@ -1,10 +1,7 @@
 package main;
 
-import com.mysql.fabric.jdbc.FabricMySQLDriver;
+import dbstuff.DBStuff;
 
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -13,35 +10,24 @@ import java.util.Scanner;
  */
 public class Main {
 
-    public static final String DBURL = "jdbc:mysql://localhost:3306/juja?useSSL=false";
-    public static final String DBUSER = "jujauser";
-    public static final String DBPASS = "password";
-
     public static void main(String[] args) {
 
-        System.out.println("What is your name?");
-        Scanner userName = new Scanner(System.in);
-        System.out.println("Hi [" + userName.nextLine() + "]");
+        System.out.print("Hi, please type command or ? for help\n> ");
+        Scanner userinput = new Scanner(System.in);
 
-        Connection connection;
-
+        DBStuff mydb = new DBStuff("juja", "jujauser", "password");
+        mydb.connect();
         try {
-            Driver driver = new FabricMySQLDriver();
-            DriverManager.registerDriver(driver);
-            connection = DriverManager.getConnection(DBURL, DBUSER, DBPASS);
-
-            if (!connection.isClosed()) {
-                System.out.println("connection to DB is open");
+            while (!mydb.connection.isClosed()) {
+                String question = userinput.nextLine();
+                System.out.print(mydb.getdbuser() + "@" + mydb.getdbname() + " > " + question);
+                if (question.equals("disconnect")) {
+                    mydb.connection.close();
+                }
             }
-
-            connection.close();
-
-            if (connection.isClosed()) {
-                System.out.println("connection to DB was closed");
-            }
+            System.out.print("\nConnection to DB was closed\n> ");
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 }
