@@ -12,6 +12,9 @@ public class Help {
         Method[] declaredMethods = DBStuff.class.getDeclaredMethods();
         System.out.println("Next commands available");
         for (Method m : declaredMethods) {
+            if (m.getName().startsWith("_")) {
+                continue;
+            }
             System.out.println("\t" + m.getName());
         }
     }

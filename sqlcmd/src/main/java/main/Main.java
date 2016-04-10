@@ -17,7 +17,7 @@ public class Main {
         DBStuff mydb = new DBStuff("", "");
 
         while (true) {
-            System.out.print(mydb.connectionInfo(""));
+            System.out.print(mydb._connectionInfo(""));
             String command = userinput.nextLine();
             if (command.equals("?")) {
                 Help.commandList();
