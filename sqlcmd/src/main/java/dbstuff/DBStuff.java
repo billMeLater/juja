@@ -15,38 +15,48 @@ public class DBStuff {
     public Connection connection;
     private String DBNAME;
     private String DBUSER;
-    private String DBPASS;
 
-    public DBStuff(String DBNAME, String DBUSER, String DBPASS) {
+    public DBStuff(String DBNAME, String DBUSER) {
         this.DBNAME = DBNAME;
         this.DBUSER = DBUSER;
-        this.DBPASS = DBPASS;
     }
 
-    public boolean connect() {
-        final String DBURL = "jdbc:mysql://localhost:3306/" + DBNAME + "?useSSL=false";
+    public void connect(String params) {
+        String[] dbParam = params.split("\\|");
+        final String DBURL = "jdbc:mysql://localhost:3306/" + dbParam[0] + "?useSSL=false";
 
         try {
             Driver driver = new FabricMySQLDriver();
             DriverManager.registerDriver(driver);
-            connection = DriverManager.getConnection(DBURL, DBUSER, DBPASS);
+            connection = DriverManager.getConnection(DBURL, dbParam[1], dbParam[2]);
 
             if (!connection.isClosed()) {
-                System.out.print("connection to DB is open\n" + DBUSER + "@" + DBNAME + " > ");
-                return true;
+                System.out.println("connection to DB is open");
+                DBNAME = dbParam[0];
+                DBUSER = dbParam[1];
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return false;
     }
 
-    public String getdbname() {
-        return DBNAME;
+    public void disconnect(String string) {
+        try {
+            connection.close();
+            DBNAME = "";
+            DBUSER = "";
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public String getdbuser() {
-        return DBUSER;
+    public void exit(String string) {
+        System.exit(0);
     }
+
+    public String connectionInfo(String string) {
+        return DBUSER + "@" + DBNAME + " > ";
+    }
+
 }
