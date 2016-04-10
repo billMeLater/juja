@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 public class Help {
     public static void commandList() {
         Method[] declaredMethods = DBStuff.class.getDeclaredMethods();
-        System.out.println("Only next available");
+        System.out.println("Next commands available");
         for (Method m : declaredMethods) {
             System.out.println("\t" + m.getName());
         }

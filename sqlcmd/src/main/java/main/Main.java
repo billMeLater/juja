@@ -19,10 +19,11 @@ public class Main {
         while (true) {
             System.out.print(mydb.connectionInfo(""));
             String command = userinput.nextLine();
+            if (command.equals("?")) {
+                Help.commandList();
+            }
             if (!Utils.readline(mydb, command)) {
                 System.out.println("Command not found!");
-                Help.commandList();
-                continue;
             }
         }
     }

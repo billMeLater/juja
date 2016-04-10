@@ -2,10 +2,7 @@ package dbstuff;
 
 import com.mysql.fabric.jdbc.FabricMySQLDriver;
 
-import java.sql.Connection;
-import java.sql.Driver;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * Created by vadim on 4/5/16.
@@ -41,7 +38,7 @@ public class DBStuff {
 
     }
 
-    public void disconnect(String string) {
+    public void disconnect(String params) {
         try {
             connection.close();
             DBNAME = "";
@@ -51,8 +48,49 @@ public class DBStuff {
         }
     }
 
-    public void exit(String string) {
+    public void exit(String params) {
         System.exit(0);
+    }
+
+    public void listTables(String params) {
+        try (Statement stmt = connection.createStatement()) {
+
+            ResultSet rs = stmt.executeQuery("show tables");
+
+            while (rs.next()) {
+                String tableName = rs.getString(1);
+                System.out.println(tableName);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showRecords(String table) {
+        try (Statement stmt = connection.createStatement()) {
+
+            ResultSet rs = stmt.executeQuery("select * from " + table + " order by 1");
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            String delimiter = ",";
+            System.out.println("table = [" + table + "]");
+
+            while (rs.next()) {
+                for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                    if (columnIndex == columnCount) {
+                        delimiter = ";\n";
+                    }
+                    System.out.printf("\t%s: ", metaData.getColumnName(columnIndex));
+                    Object object = rs.getObject(columnIndex);
+                    System.out.printf("%s" + delimiter + " ", object == null ? "NULL" : object.toString());
+                }
+                delimiter = ",";
+            }
+            System.out.println("--------------");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public String connectionInfo(String string) {
