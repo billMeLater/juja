@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Cosole implements View {
     @Override
     public void write(String message) {
-        System.out.println(message);
+        System.out.print(message);
     }
 
     @Override

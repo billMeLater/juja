@@ -2,11 +2,11 @@ package controller;
 
 import model.DatabaseManager;
 import model.Help;
-import model.MySQLDatabaseManager;
-import model.Utils;
 import view.View;
 
-import java.util.Scanner;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 
 /**
  * Created by vadim on 4/12/16.
@@ -21,19 +21,43 @@ public class MainController {
         this.databaseManager = databaseManager;
     }
 
+    private boolean executeCommand(String command) {
+
+        String[] tokens = command.split(" ");
+        String commandParams = "";
+        for (int i = 1; i < tokens.length; i++) {
+            commandParams += tokens[i];
+        }
+
+        Method[] declaredMethods = databaseManager.getClass().getDeclaredMethods();
+        for (Method m : declaredMethods) {
+            if (m.getName().equals(tokens[0])) {
+                try {
+                    m.invoke(databaseManager, commandParams);
+                    return true;
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return false;
+    }
+
     public void run() {
-        System.out.println("Hi, please type command or ? for help ");
-        Scanner userinput = new Scanner(System.in);
-        DatabaseManager mydb = new MySQLDatabaseManager("", "");
+        view.write("Hi, please type command or ? for help\n");
 
         while (true) {
-            System.out.print(mydb._connectionInfo(""));
-            String command = userinput.nextLine();
+            view.write(databaseManager._connectionInfo(""));
+            String command = view.read();
             if (command.equals("?")) {
                 Help.commandList();
+                continue;
             }
-            if (!Utils.readline(mydb, command)) {
-                System.out.println("Command not found!");
+
+            if (!executeCommand(command)) {
+                view.write("Command not found!\n type ? for help\n");
             }
         }
     }
