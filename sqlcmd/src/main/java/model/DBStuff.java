@@ -1,4 +1,4 @@
-package dbstuff;
+package model;
 
 import com.mysql.fabric.jdbc.FabricMySQLDriver;
 

@@ -1,6 +1,4 @@
-package help;
-
-import dbstuff.DBStuff;
+package model;
 
 import java.lang.reflect.Method;
 

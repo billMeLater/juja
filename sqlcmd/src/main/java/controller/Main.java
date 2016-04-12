@@ -1,7 +1,8 @@
-package main;
+package controller;
 
-import dbstuff.DBStuff;
-import help.Help;
+import model.DBStuff;
+import model.Help;
+import model.Utils;
 
 import java.util.Scanner;
 
