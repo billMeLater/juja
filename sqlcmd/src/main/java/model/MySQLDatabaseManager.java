@@ -7,17 +7,18 @@ import java.sql.*;
 /**
  * Created by vadim on 4/5/16.
  */
-public class DBStuff {
+public class MySQLDatabaseManager implements DatabaseManager {
 
     private Connection connection;
     private String DBNAME;
     private String DBUSER;
 
-    public DBStuff(String DBNAME, String DBUSER) {
+    public MySQLDatabaseManager(String DBNAME, String DBUSER) {
         this.DBNAME = DBNAME;
         this.DBUSER = DBUSER;
     }
 
+    @Override
     public void connect(String params) {
         String[] dbParam = params.split("\\|");
         if (dbParam.length == 3) {
@@ -45,6 +46,7 @@ public class DBStuff {
         }
     }
 
+    @Override
     public void disconnect(String params) {
         if (!DBNAME.isEmpty()) {
             try {
@@ -59,10 +61,12 @@ public class DBStuff {
         }
     }
 
+    @Override
     public void exit(String params) {
         System.exit(0);
     }
 
+    @Override
     public void listTables(String params) {
         if (!DBNAME.isEmpty()) {
             try {
@@ -88,6 +92,7 @@ public class DBStuff {
         }
     }
 
+    @Override
     public void showRecords(String table) {
         if (!DBNAME.isEmpty()) {
             if (!table.isEmpty()) {
@@ -124,6 +129,7 @@ public class DBStuff {
         }
     }
 
+    @Override
     public String _connectionInfo(String string) {
         return DBUSER + "@" + DBNAME + " > ";
     }

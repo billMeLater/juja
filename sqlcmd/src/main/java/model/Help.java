@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
  */
 public class Help {
     public static void commandList() {
-        Method[] declaredMethods = DBStuff.class.getDeclaredMethods();
+        Method[] declaredMethods = MySQLDatabaseManager.class.getDeclaredMethods();
         System.out.println("Next commands available");
         for (Method m : declaredMethods) {
             if (m.getName().startsWith("_")) {

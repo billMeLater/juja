@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
  */
 public class Utils {
 
-    public static boolean readline(DBStuff mydb, String command) {
+    public static boolean readline(DatabaseManager mydb, String command) {
 
         String[] tokens = command.split(" ");
         String commandParams = "";
@@ -16,7 +16,7 @@ public class Utils {
             commandParams += tokens[i];
         }
 
-        Method[] declaredMethods = DBStuff.class.getDeclaredMethods();
+        Method[] declaredMethods = MySQLDatabaseManager.class.getDeclaredMethods();
         for (Method m : declaredMethods) {
             if (m.getName().equals(tokens[0])) {
                 try {
