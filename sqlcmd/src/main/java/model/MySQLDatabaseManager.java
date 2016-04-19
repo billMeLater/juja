@@ -1,21 +1,21 @@
 package model;
 
 import com.mysql.fabric.jdbc.FabricMySQLDriver;
+import view.View;
 
 import java.sql.*;
 
-/**
- * Created by vadim on 4/5/16.
- */
-public class MySQLDatabaseManager implements DatabaseManager {
 
+public class MySQLDatabaseManager implements DatabaseManager {
     private Connection connection;
+    private View view;
     private String DBNAME;
     private String DBUSER;
 
-    public MySQLDatabaseManager(String DBNAME, String DBUSER) {
-        this.DBNAME = DBNAME;
-        this.DBUSER = DBUSER;
+    public MySQLDatabaseManager(View view) {
+        DBNAME = "";
+        DBUSER = "";
+        this.view = view;
     }
 
     @Override
@@ -34,15 +34,15 @@ public class MySQLDatabaseManager implements DatabaseManager {
                 connection = DriverManager.getConnection(DBURL, dbUser, dbPass);
 
                 if (!connection.isClosed()) {
-                    System.out.println("Connection to DB '" + dbName + "' established");
+                    view.write("Connection to DB '" + dbName + "' established\n");
                     DBNAME = dbName;
                     DBUSER = dbUser;
                 }
             } catch (SQLException e) {
-                System.out.println("Connection to DB '" + dbName + "' failed!\n" + e.getMessage());
+                view.write("Connection to DB '" + dbName + "' failed!\n" + e.getMessage());
             }
         } else {
-            System.out.println("usage: connect dbName|dbUser|password");
+            view.write("usage: connect dbName|dbUser|password\n");
         }
     }
 
@@ -57,7 +57,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("Connect to DB first");
+            view.write("Connect to DB first\n");
         }
     }
 
@@ -96,36 +96,58 @@ public class MySQLDatabaseManager implements DatabaseManager {
     public void showRecords(String table) {
         if (!DBNAME.isEmpty()) {
             if (!table.isEmpty()) {
-                try (Statement stmt = connection.createStatement()) {
+                String limit = "100";
+                String offset = "0";
 
-                    ResultSet rs = stmt.executeQuery("select * from " + table + " order by 1");
-                    ResultSetMetaData metaData = rs.getMetaData();
-                    int columnCount = metaData.getColumnCount();
-                    String delimiter = ",";
-                    System.out.println("table = [" + table + "]");
-
-                    while (rs.next()) {
-                        for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-                            if (columnIndex == columnCount) {
-                                delimiter = ";\n";
-                            }
-                            System.out.printf("\t%s: ", metaData.getColumnName(columnIndex));
-                            Object object = rs.getObject(columnIndex);
-                            System.out.printf("%s" + delimiter + " ", object == null ? "NULL" : object.toString());
-                        }
-                        delimiter = ",";
+                String[] parameters = table.split("\\|");
+                String tableName = parameters[0];
+                ;
+                if (parameters.length == 3) {
+                    if (!parameters[1].isEmpty()) {
+                        limit = parameters[1];
                     }
-                    System.out.println("--------------");
+                    offset = parameters[2];
+                } else if (parameters.length == 2) {
+                    limit = parameters[1];
+                }
+
+                try (Statement stmt = connection.createStatement()) {
+                    ResultSet rowsCount = stmt.executeQuery("select count(*) from "
+                            + "(select 1 from " + tableName + " limit " + limit + " offset " + offset + ") as count");
+                    rowsCount.next();
+                    int tableSize = rowsCount.getInt(1);
+
+                    ResultSet rs = stmt.executeQuery("select * from " + tableName
+                            + " order by 1 limit " + limit + " offset " + offset);
+                    ResultSetMetaData metaData = rs.getMetaData();
+
+                    int columnCount = metaData.getColumnCount();
+                    String[][] tableBody = new String[tableSize + 1][columnCount];
+                    for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                        tableBody[0][columnIndex - 1] = metaData.getColumnName(columnIndex);
+                    }
+
+                    int j = 1;
+                    while (rs.next()) {
+                        tableBody[j] = new String[columnCount];
+
+                        for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                            tableBody[j][columnIndex - 1] = rs.getString(columnIndex);
+                        }
+                        j++;
+                    }
+                    view.drawTable(tableBody);
 
                 } catch (SQLException e) {
-                    System.out.println("Show records for table '" + table + "' failed!\n" + e.getMessage());
+                    view.write("Show records for table '" + table + "' failed!\n" + e.getMessage());
                     this.listTables("");
                 }
             } else {
-                System.out.println("usage:  showRecords tableName");
+                view.write("usage: showRecords tableName|limit|offset\n\tlimit and offset are not mandatory,"
+                        + " safely to skip both or any one\n");
             }
         } else {
-            System.out.println("Connect to DB first");
+            view.write("Connect to DB first\n");
         }
     }
 

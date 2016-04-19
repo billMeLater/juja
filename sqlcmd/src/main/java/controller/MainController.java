@@ -7,12 +7,7 @@ import view.View;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-
-/**
- * Created by vadim on 4/12/16.
- */
 public class MainController {
-
     private View view;
     private DatabaseManager databaseManager;
 
@@ -61,5 +56,4 @@ public class MainController {
             }
         }
     }
-
 }
