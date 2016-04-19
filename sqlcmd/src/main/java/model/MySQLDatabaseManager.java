@@ -21,6 +21,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
     public List connect(String params) {
         final String DEFAULT_PARAM = "dbName|dbUser|password";
         final String INFO = "all parameters mandatory";
+
         String[] dbParam = params.split("\\|");
         if (dbParam.length == DEFAULT_PARAM.split("\\|").length) {
             String dbName = dbParam[0];
