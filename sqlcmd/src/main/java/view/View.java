@@ -8,7 +8,5 @@ import java.util.List;
 public interface View {
     void write(List message);
 
-//    void drawTable(String[][] data);
-
     String read();
 }

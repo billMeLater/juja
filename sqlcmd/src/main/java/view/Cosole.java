@@ -1,5 +1,7 @@
 package view;
 
+import dnl.utils.text.table.TextTable;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -7,22 +9,24 @@ public class Cosole implements View {
 
     @Override
     public void write(List messages) {
-        for (Object message : messages) {
-            System.out.print("\n" + message.toString());
+        if (messages.get(0).toString().equals("_drawTable_")) {
+            String[] header = new String[1];
+            if ((Boolean) messages.get(1)) {
+                header = (String[]) messages.get(3);
+            }
+            Object[][] body = new Object[messages.size() - 4][1];
+            for (int i = 4; i < messages.size(); i++) {
+                body[i - 4] = (Object[]) messages.get(i);
+            }
+            TextTable table = new TextTable(header, body);
+            table.setAddRowNumbering((Boolean) messages.get(2));
+            table.printTable();
+        } else {
+            for (Object message : messages) {
+                System.out.print("\n" + message.toString());
+            }
         }
     }
-
-//    @Override
-//    public void drawTable(String[][] data) {
-//        Object[][] body = new Object[data.length - 1][data[0].length];
-//        for (int i = 1; i < data.length; i++) {
-//            body[i - 1] = data[i];
-//        }
-//
-//        TextTable table = new TextTable(data[0], body);
-//        table.setAddRowNumbering(true);
-//        table.printTable();
-//    }
 
     @Override
     public String read() {
