@@ -6,6 +6,8 @@ import view.View;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainController {
     private View view;
@@ -16,8 +18,7 @@ public class MainController {
         this.databaseManager = databaseManager;
     }
 
-    private boolean executeCommand(String command) {
-
+    private List executeCommand(String command) {
         String[] tokens = command.split(" ");
         String commandParams = "";
         for (int i = 1; i < tokens.length; i++) {
@@ -28,8 +29,7 @@ public class MainController {
         for (Method m : declaredMethods) {
             if (m.getName().equals(tokens[0])) {
                 try {
-                    m.invoke(databaseManager, commandParams);
-                    return true;
+                    return (List) m.invoke(databaseManager, commandParams);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
@@ -37,23 +37,26 @@ public class MainController {
                 }
             }
         }
-        return false;
+        List result = new ArrayList();
+        result.add("Command not found!");
+        result.add("type ? for help");
+        return result;
     }
 
     public void run() {
-        view.write("Hi, please type command or ? for help\n");
+        List hello = new ArrayList(1);
+        hello.add("Hi, please type command or ? for help");
+        view.write(hello);
 
         while (true) {
             view.write(databaseManager._connectionInfo(""));
             String command = view.read();
             if (command.equals("?")) {
-                Help.commandList();
+                view.write(Help.commandList());
                 continue;
             }
 
-            if (!executeCommand(command)) {
-                view.write("Command not found!\n type ? for help\n");
-            }
+            view.write(executeCommand(command));
         }
     }
 }

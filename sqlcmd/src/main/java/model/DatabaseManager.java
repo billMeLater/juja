@@ -1,18 +1,23 @@
 package model;
 
+import java.util.List;
+
 /**
  * Created by vadim on 4/12/16.
  */
 public interface DatabaseManager {
-    void connect(String params);
+    List connect(String params);
 
-    void disconnect(String params);
+    List disconnect(String params);
 
-    void exit(String params);
+    List exit(String params);
 
-    void listTables(String params);
+    List _usage(String methodName, String parameter, String info);
 
-    void showRecords(String table);
+    List _connectionInfo(String string);
 
-    String _connectionInfo(String string);
+    List listTables(String params);
+
+//    String[][] showRecords(String table);
+
 }
