@@ -20,7 +20,11 @@ public class MySQLDatabaseManager implements DatabaseManager {
     @Override
     public List connect(String params) {
         final String DEFAULT_PARAM = "dbName|dbUser|password";
-        final String INFO = "all parameters mandatory";
+        final String INFO = "\tconnect to DB. All parameters mandatory";
+
+        if (params.equals("_usage")) {
+            return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+        }
 
         String[] dbParam = params.split("\\|");
         if (dbParam.length == DEFAULT_PARAM.split("\\|").length) {
@@ -55,23 +59,37 @@ public class MySQLDatabaseManager implements DatabaseManager {
 
     @Override
     public List disconnect(String params) {
+        final String DEFAULT_PARAM = "";
+        final String INFO = "\tclose existing DB connection";
+
+        if (params.equals("_usage")) {
+            return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+        }
+
         List result = new ArrayList();
         if (_isConnected()) {
             try {
                 connection.close();
                 DBNAME = "";
                 DBUSER = "";
-                result.add("connection closed");
+                result.add("Connection closed");
                 return result;
             } catch (SQLException e) {
                 result.add(e.getStackTrace());
             }
         }
+        result.add("Connection does not exist. Connect to DB first.");
         return result;
     }
 
     @Override
     public List listTables(String params) {
+        final String DEFAULT_PARAM = "";
+        final String INFO = "\tshow list of existing tables";
+
+        if (params.equals("_usage")) {
+            return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+        }
         List result = new ArrayList();
         if (_isConnected()) {
             try (Statement stmt = connection.createStatement()) {
@@ -95,7 +113,12 @@ public class MySQLDatabaseManager implements DatabaseManager {
     @Override
     public List showRecords(String table) {
         final String DEFAULT_PARAM = "tableName|limit|offset";
-        final String INFO = "limit and offset are not mandatory, safely to skip both or any one";
+        final String INFO = "\t show records from table 'tableName'. Limit and offset are not mandatory, safely to skip both or any one";
+
+        if (table.equals("_usage")) {
+            return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+        }
+
         List result = new ArrayList();
         if (_isConnected()) {
             if (!table.isEmpty()) {
@@ -154,6 +177,11 @@ public class MySQLDatabaseManager implements DatabaseManager {
 
     @Override
     public List exit(String params) {
+        final String DEFAULT_PARAM = "";
+        final String INFO = "\texit from SQLCmd";
+        if (params.equals("_usage")) {
+            return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+        }
         disconnect("");
         System.exit(0);
         return new ArrayList(0);
@@ -162,7 +190,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
     @Override
     public List _usage(String methodName, String parameter, String info) {
         List result = new ArrayList();
-        result.add("usage: " + methodName + " " + parameter);
+        result.add("\n" + methodName + " " + parameter);
         result.add(info);
         return result;
     }
