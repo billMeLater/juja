@@ -2,9 +2,6 @@ package model;
 
 import java.util.List;
 
-/**
- * Created by vadim on 4/12/16.
- */
 public interface DatabaseManager {
     List connect(String params);
 

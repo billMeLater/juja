@@ -5,7 +5,7 @@ import dnl.utils.text.table.TextTable;
 import java.util.List;
 import java.util.Scanner;
 
-public class Cosole implements View {
+public class Console implements View {
 
     @Override
     public void write(List messages) {
