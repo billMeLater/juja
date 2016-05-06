@@ -4,6 +4,7 @@ import com.mysql.fabric.jdbc.FabricMySQLDriver;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -83,7 +84,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public List listTables(String params) {
+    public List showTables(String params) {
         final String DEFAULT_PARAM = "";
         final String INFO = "\tshow list of existing tables";
 
@@ -110,22 +111,123 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
-    @Override
-    public List showRecords(String table) {
-        final String DEFAULT_PARAM = "tableName|limit|offset";
-        final String INFO = "\t show records from table 'tableName'. Limit and offset are not mandatory, safely to skip both or any one";
+//    @Override
+//    public List createTable(String params) {
+//     return new ArrayList();
+//    }
 
-        if (table.equals("_usage")) {
+    @Override
+    public List addRecord(String params) {
+        final String DEFAULT_PARAM = "tableName|field1|value1|...|fieldN|valueN";
+        final String INFO = "\t add record into table 'tableName' with 'field'='value' pairs. "
+                + "'tableName' or 'field' can't be empty.";
+
+        if (params.equals("_usage")) {
             return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
         }
 
         List result = new ArrayList();
         if (_isConnected()) {
-            if (!table.isEmpty()) {
+            if (!params.isEmpty()) {
+                String[] parameters = params.split("\\|");
+                if (parameters.length < 3 || parameters[0].isEmpty() || parameters.length % 2 == 0) {
+                    return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+                }
+
+                String tableName = parameters[0];
+                String fields = "";
+                String values = "";
+                for (int i = 1; i < parameters.length; i = i + 2) {
+                    if (parameters[i].isEmpty()) {
+                        return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+                    }
+                    fields += parameters[i];
+                    values += "'" + parameters[i + 1] + "'";
+                    if (i + 2 < parameters.length) {
+                        fields += ",";
+                        values += ",";
+                    }
+                }
+
+                try (Statement stmt = connection.createStatement()) {
+                    stmt.executeUpdate("insert into " + tableName + " (" + fields + ") values(" + values + ")");
+                    result.add("record was added.");
+                } catch (SQLException e) {
+                    result.add("addRecord - FAILED!");
+                    result.add(e.getMessage());
+                }
+            } else {
+                return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+            }
+        } else {
+            result.add("Connect to DB first");
+        }
+        return result;
+    }
+
+    @Override
+    public List removeRecord(String params) {
+        final String DEFAULT_PARAM = "tableName|field1|value1|...|fieldN|valueN";
+        final String INFO = "\t remove records from table 'tableName' with clause 'field'='value'. "
+                + "Use 'removeRecord tableName|*|*' to remove all records from table 'tableName'.";
+
+        if (params.equals("_usage")) {
+            return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+        }
+
+        List result = new ArrayList();
+        if (_isConnected()) {
+            if (!params.isEmpty()) {
+                String[] parameters = params.split("\\|");
+                if (parameters.length < 3 || Arrays.asList(parameters).contains("") || parameters.length % 2 == 0) {
+                    return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+                }
+
+                String tableName = parameters[0];
+                String where = "";
+                if (!(parameters[1].equals("*") && parameters[2].equals("*"))) {
+                    where += " where ";
+                    for (int i = 1; i < parameters.length; i = i + 2) {
+                        where += parameters[i] + "='" + parameters[i + 1] + "'";
+                        if (i + 2 < parameters.length) {
+                            where += " and ";
+                        }
+                    }
+                }
+
+                try (Statement stmt = connection.createStatement()) {
+                    stmt.executeUpdate("delete from " + tableName + where);
+                    result.add("record(s) removed.");
+                } catch (SQLException e) {
+                    result.add("removeRecord - FAILED!");
+                    result.add(e.getMessage());
+                }
+            } else {
+                return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+            }
+        } else {
+            result.add("Connect to DB first");
+        }
+        return result;
+    }
+
+    @Override
+    public List showRecords(String params) {
+        final String DEFAULT_PARAM = "tableName|limit|offset";
+        final String INFO = "\t show records from table 'tableName'. "
+                + "Limit and offset are not mandatory, safely to skip both or any one";
+
+        if (params.equals("_usage")) {
+            return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+        }
+
+        List result = new ArrayList();
+        if (_isConnected()) {
+            if (!params.isEmpty()) {
                 String limit = "100";
                 String offset = "0";
 
-                String[] parameters = table.split("\\|");
+                String[] parameters = params.split("\\|");
                 String tableName = parameters[0];
 
                 if (parameters.length == 3) {
@@ -162,7 +264,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
                     }
                     return result;
                 } catch (SQLException e) {
-                    result.add("Show records for table '" + table + "' failed!");
+                    result.add("Show records for table '" + params + "' failed!");
                     result.add(e.getMessage());
                     return result;
                 }
@@ -202,6 +304,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
+    @Override
     public boolean _isConnected() {
         if (!DBNAME.isEmpty()) {
             try {
@@ -212,5 +315,10 @@ public class MySQLDatabaseManager implements DatabaseManager {
             }
         }
         return false;
+    }
+
+    @Override
+    public Connection _getConnection() {
+        return connection;
     }
 }

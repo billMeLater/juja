@@ -44,7 +44,8 @@ public class MainController {
 
     public void run() {
         List hello = new ArrayList(1);
-        hello.add("Hi, please type command or ? for help");
+        String helpCommand = "? for help";
+        hello.add("Hi, please type command or " + helpCommand);
         view.write(hello);
 
         while (true) {
@@ -68,7 +69,7 @@ public class MainController {
                 view.write(executeCommand(command));
             } else {
                 List help = new ArrayList(1);
-                help.add("command not found");
+                help.add("command not found. (" + helpCommand + ")");
                 view.write(help);
             }
         }
