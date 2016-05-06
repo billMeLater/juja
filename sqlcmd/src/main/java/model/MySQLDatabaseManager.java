@@ -83,6 +83,16 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
+//    @Override
+//    public List createTable(String params) {
+//     return new ArrayList();
+//    }
+
+    //   @Override
+//    public List dropTable(String params) {
+//     return new ArrayList();
+//    }
+
     @Override
     public List showTables(String params) {
         final String DEFAULT_PARAM = "";
@@ -110,11 +120,6 @@ public class MySQLDatabaseManager implements DatabaseManager {
         }
         return result;
     }
-
-//    @Override
-//    public List createTable(String params) {
-//     return new ArrayList();
-//    }
 
     @Override
     public List addRecord(String params) {
