@@ -10,9 +10,9 @@ public interface DatabaseManager {
 
     List exit(String params);
 
-//    List createTable(String params);
+    List createTable(String params);
 
-//    List dropTable(String params);
+    List dropTable(String params);
 
     List showTables(String params);
 

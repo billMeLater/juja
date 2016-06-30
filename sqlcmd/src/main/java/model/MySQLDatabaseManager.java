@@ -83,15 +83,81 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
-//    @Override
-//    public List createTable(String params) {
-//     return new ArrayList();
-//    }
+    @Override
+    public List createTable(String params) {
+        final String DEFAULT_PARAM = "tableName|fieldName1|fieldType1|...|fieldNameN|fieldTypeN";
+        final String INFO = "\t create table 'tableName' with desired fields.";
 
-    //   @Override
-//    public List dropTable(String params) {
-//     return new ArrayList();
-//    }
+        if (params.equals("_usage")) {
+            return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+        }
+
+        List result = new ArrayList();
+        if (_isConnected()) {
+            if (!params.isEmpty()) {
+                String[] parameters = params.split("\\|");
+                if (parameters.length < 3 || Arrays.asList(parameters).contains("") || parameters.length % 2 == 0) {
+                    return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+                }
+
+                String tableName = parameters[0];
+                String fields = "";
+                for (int i = 1; i < parameters.length; i = i + 2) {
+                    fields += parameters[i] + " " + parameters[i + 1];
+                    if (i + 2 < parameters.length) {
+                        fields += ", ";
+                    }
+                }
+                try (Statement stmt = connection.createStatement()) {
+                    stmt.executeUpdate("create table " + tableName + "(" + fields + ")");
+                    result.add("table '" + tableName + "' with fields (" + fields + ") created");
+                } catch (SQLException e) {
+                    result.add("create table '" + tableName + "' with fields (" + fields + ") - FAILED!");
+                    result.add(e.getMessage());
+                }
+            } else {
+                return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+            }
+        } else {
+            result.add("Connect to DB first");
+        }
+        return result;
+    }
+
+    @Override
+    public List dropTable(String params) {
+        final String DEFAULT_PARAM = "tableName";
+        final String INFO = "\t delete table 'tableName'";
+
+        if (params.equals("_usage")) {
+            return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+        }
+
+        List result = new ArrayList();
+        if (_isConnected()) {
+            if (!params.isEmpty()) {
+                String[] parameters = params.split("\\|");
+                if (parameters.length < 1 || Arrays.asList(parameters).contains("")) {
+                    return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+                }
+
+                String tableName = parameters[0];
+
+                try (Statement stmt = connection.createStatement()) {
+                    stmt.executeUpdate("drop table if exists " + tableName);
+                    result.add("table '" + tableName + "' deleted");
+                } catch (SQLException e) {
+                    result.add("delete table '" + tableName + "' - FAILED!");
+                    result.add(e.getMessage());
+                }
+            } else {
+                return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
+            }
+        } else {
+            result.add("Connect to DB first");
+        }
+        return result;
+    }
 
     @Override
     public List showTables(String params) {
