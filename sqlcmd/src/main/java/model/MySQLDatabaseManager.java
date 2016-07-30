@@ -189,9 +189,9 @@ public class MySQLDatabaseManager implements DatabaseManager {
 
     @Override
     public List addRecord(String params) {
-        final String DEFAULT_PARAM = "tableName|field1|value1|...|fieldN|valueN";
-        final String INFO = "\t add record into table 'tableName' with 'field'='value' pairs. "
-                + "'tableName' or 'field' can't be empty.";
+        final String DEFAULT_PARAM = "tableName|fieldName1|value1|...|fieldNameN|valueN";
+        final String INFO = "\t add record into table 'tableName' with 'fieldName'='value' pairs. "
+                + "'tableName' or 'fieldName' can't be empty.";
 
         if (params.equals("_usage")) {
             return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
@@ -238,8 +238,8 @@ public class MySQLDatabaseManager implements DatabaseManager {
 
     @Override
     public List removeRecord(String params) {
-        final String DEFAULT_PARAM = "tableName|field1|value1|...|fieldN|valueN";
-        final String INFO = "\t remove records from table 'tableName' with clause 'field'='value'. "
+        final String DEFAULT_PARAM = "tableName|fieldName1|value1|...|fieldNameN|valueN";
+        final String INFO = "\t remove records from table 'tableName' with clause 'fieldName'='value'. "
                 + "Use 'removeRecord tableName|*|*' to remove all records from table 'tableName'.";
 
         if (params.equals("_usage")) {
@@ -286,7 +286,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
     public List showRecords(String params) {
         final String DEFAULT_PARAM = "tableName|limit|offset";
         final String INFO = "\t show records from table 'tableName'. "
-                + "Limit and offset are not mandatory, safely to skip both or any one";
+                + "Limit and offset are natural numbers and not mandatory, safely to skip both or any one";
 
         if (params.equals("_usage")) {
             return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);

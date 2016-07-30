@@ -260,7 +260,6 @@ public class MySQLDatabaseManagerTest {
         result.add(true);
         result.add(true);
         result.add(new String[]{"id", "name"});
-//        result.add(new String[]{"101", "TestName101"});
         result.add(new String[]{"111", "TestName101"});
         when(test.showRecords(param)).thenReturn(result);
         assertArrayEquals(test.showRecords(param).toArray(), manager.showRecords(param).toArray());
@@ -271,7 +270,6 @@ public class MySQLDatabaseManagerTest {
         result.add(true);
         result.add(true);
         result.add(new String[]{"id", "name"});
-//        result.add(new String[]{"101", "TestName101"});
         result.add(new String[]{"111", "TestName101"});
         when(test.showRecords(param)).thenReturn(result);
         assertArrayEquals(test.showRecords(param).toArray(), manager.showRecords(param).toArray());
@@ -283,7 +281,6 @@ public class MySQLDatabaseManagerTest {
         result.add(true);
         result.add(new String[]{"id", "name"});
         result.add(new String[]{"101", "TestName101"});
-//        result.add(new String[]{"111", "TestName101"});
         when(test.showRecords(param)).thenReturn(result);
         assertArrayEquals(test.showRecords(param).toArray(), manager.showRecords(param).toArray());
 

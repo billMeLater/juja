@@ -15,11 +15,6 @@ import static org.mockito.Mockito.verify;
 public class ConsoleTest {
     Console view = new Console();
 
-//    @Test
-//    public void read() {
-//
-//    }
-
     @Test
     public void write() {
         String param = "hi there";
