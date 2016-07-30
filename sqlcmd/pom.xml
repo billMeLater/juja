@@ -49,7 +49,7 @@
     <repositories>
         <repository>
             <id>j-text-utils-repo</id>
-            <url>https://github.com/Udinic/j-text-utils/tree/master/repo/</url>
+            <url>https://github.com/billMeLater/juja/raw/master/repo/</url>
         </repository>
     </repositories>
 </project>
