@@ -2,3 +2,4 @@ sqlcmd/.idea
 sqlcmd/target
 sqlcmd/out
 sqlcmd/sqlcmd.iml
+sqlcmd/META-INF/MANIFEST.MF
