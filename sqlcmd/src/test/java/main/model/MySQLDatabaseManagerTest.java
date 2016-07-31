@@ -98,21 +98,21 @@ public class MySQLDatabaseManagerTest {
         result = new ArrayList(2);
         result.add("\nshowRecords tableName|limit|offset");
         result.add("\t show records from table 'tableName'."
-                + " Limit and offset are not mandatory, safely to skip both or any one");
+                + " Limit and offset are natural numbers and not mandatory, safely to skip both or any one");
         when(test.showRecords(param)).thenReturn(result);
         assertEquals(test.showRecords(param), manager.showRecords(param));
 
         param = "_usage";
         result = new ArrayList(2);
-        result.add("\naddRecord tableName|field1|value1|...|fieldN|valueN");
-        result.add("\t add record into table 'tableName' with 'field'='value' pairs. 'tableName' or 'field' can't be empty.");
+        result.add("\naddRecord tableName|fieldName1|value1|...|fieldNameN|valueN");
+        result.add("\t add record into table 'tableName' with 'fieldName'='value' pairs. 'tableName' or 'fieldName' can't be empty.");
         when(test.addRecord(param)).thenReturn(result);
         assertEquals(test.addRecord(param), manager.addRecord(param));
 
         param = "_usage";
         result = new ArrayList(2);
-        result.add("\nremoveRecord tableName|field1|value1|...|fieldN|valueN");
-        result.add("\t remove records from table 'tableName' with clause 'field'='value'. "
+        result.add("\nremoveRecord tableName|fieldName1|value1|...|fieldNameN|valueN");
+        result.add("\t remove records from table 'tableName' with clause 'fieldName'='value'. "
                 + "Use 'removeRecord tableName|*|*' to remove all records from table 'tableName'.");
         when(test.removeRecord(param)).thenReturn(result);
         assertEquals(test.removeRecord(param), manager.removeRecord(param));
@@ -148,51 +148,51 @@ public class MySQLDatabaseManagerTest {
         result = new ArrayList(2);
         result.add("\nshowRecords tableName|limit|offset");
         result.add("\t show records from table 'tableName'."
-                + " Limit and offset are not mandatory, safely to skip both or any one");
+                + " Limit and offset are natural numbers and not mandatory, safely to skip both or any one");
         when(test.showRecords(param)).thenReturn(result);
         assertEquals(test.showRecords(param), manager.showRecords(param));
 
         param = "";
         result = new ArrayList(2);
-        result.add("\naddRecord tableName|field1|value1|...|fieldN|valueN");
-        result.add("\t add record into table 'tableName' with 'field'='value' pairs. 'tableName' or 'field' can't be empty.");
+        result.add("\naddRecord tableName|fieldName1|value1|...|fieldNameN|valueN");
+        result.add("\t add record into table 'tableName' with 'fieldName'='value' pairs. 'tableName' or 'fieldName' can't be empty.");
         when(test.addRecord(param)).thenReturn(result);
         assertEquals(test.addRecord(param), manager.addRecord(param));
 
         param = "";
         result = new ArrayList(2);
-        result.add("\nremoveRecord tableName|field1|value1|...|fieldN|valueN");
-        result.add("\t remove records from table 'tableName' with clause 'field'='value'. "
+        result.add("\nremoveRecord tableName|fieldName1|value1|...|fieldNameN|valueN");
+        result.add("\t remove records from table 'tableName' with clause 'fieldName'='value'. "
                 + "Use 'removeRecord tableName|*|*' to remove all records from table 'tableName'.");
         when(test.removeRecord(param)).thenReturn(result);
         assertEquals(test.removeRecord(param), manager.removeRecord(param));
 
         param = TEMP_TABLE + "|a|b|c";
         result = new ArrayList(2);
-        result.add("\naddRecord tableName|field1|value1|...|fieldN|valueN");
-        result.add("\t add record into table 'tableName' with 'field'='value' pairs. 'tableName' or 'field' can't be empty.");
+        result.add("\naddRecord tableName|fieldName1|value1|...|fieldNameN|valueN");
+        result.add("\t add record into table 'tableName' with 'fieldName'='value' pairs. 'tableName' or 'fieldName' can't be empty.");
         when(test.addRecord(param)).thenReturn(result);
         assertEquals(test.addRecord(param), manager.addRecord(param));
 
         param = TEMP_TABLE + "|a|b|c";
         result = new ArrayList(2);
-        result.add("\nremoveRecord tableName|field1|value1|...|fieldN|valueN");
-        result.add("\t remove records from table 'tableName' with clause 'field'='value'. "
+        result.add("\nremoveRecord tableName|fieldName1|value1|...|fieldNameN|valueN");
+        result.add("\t remove records from table 'tableName' with clause 'fieldName'='value'. "
                 + "Use 'removeRecord tableName|*|*' to remove all records from table 'tableName'.");
         when(test.removeRecord(param)).thenReturn(result);
         assertEquals(test.removeRecord(param), manager.removeRecord(param));
 
         param = TEMP_TABLE + "||b";
         result = new ArrayList(2);
-        result.add("\naddRecord tableName|field1|value1|...|fieldN|valueN");
-        result.add("\t add record into table 'tableName' with 'field'='value' pairs. 'tableName' or 'field' can't be empty.");
+        result.add("\naddRecord tableName|fieldName1|value1|...|fieldNameN|valueN");
+        result.add("\t add record into table 'tableName' with 'fieldName'='value' pairs. 'tableName' or 'fieldName' can't be empty.");
         when(test.addRecord(param)).thenReturn(result);
         assertEquals(test.addRecord(param), manager.addRecord(param));
 
         param = TEMP_TABLE + "||b";
         result = new ArrayList(2);
-        result.add("\nremoveRecord tableName|field1|value1|...|fieldN|valueN");
-        result.add("\t remove records from table 'tableName' with clause 'field'='value'. "
+        result.add("\nremoveRecord tableName|fieldName1|value1|...|fieldNameN|valueN");
+        result.add("\t remove records from table 'tableName' with clause 'fieldName'='value'. "
                 + "Use 'removeRecord tableName|*|*' to remove all records from table 'tableName'.");
         when(test.removeRecord(param)).thenReturn(result);
         assertEquals(test.removeRecord(param), manager.removeRecord(param));
