@@ -1,4 +1,4 @@
-package view;
+package ua.com.juja.vadim.sqlcmd.view;
 
 import java.util.List;
 

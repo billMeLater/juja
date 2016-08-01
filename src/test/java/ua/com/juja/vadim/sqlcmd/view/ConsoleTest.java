@@ -1,9 +1,8 @@
-package main.view;
+package ua.com.juja.vadim.sqlcmd.view;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import view.Console;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

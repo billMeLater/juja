@@ -1,7 +1,5 @@
-package main.model;
+package ua.com.juja.vadim.sqlcmd.model;
 
-import model.DatabaseManager;
-import model.MySQLDatabaseManager;
 import org.junit.Test;
 import org.mockito.Mockito;
 

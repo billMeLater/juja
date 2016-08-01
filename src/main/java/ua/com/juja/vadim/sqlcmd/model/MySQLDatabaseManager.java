@@ -1,4 +1,4 @@
-package model;
+package ua.com.juja.vadim.sqlcmd.model;
 
 import com.mysql.fabric.jdbc.FabricMySQLDriver;
 

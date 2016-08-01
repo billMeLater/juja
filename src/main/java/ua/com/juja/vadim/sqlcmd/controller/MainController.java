@@ -1,7 +1,7 @@
-package controller;
+package ua.com.juja.vadim.sqlcmd.controller;
 
-import model.DatabaseManager;
-import view.View;
+import ua.com.juja.vadim.sqlcmd.model.DatabaseManager;
+import ua.com.juja.vadim.sqlcmd.view.View;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

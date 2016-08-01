@@ -1,5 +1,6 @@
-.idea
-target
-out
+/.idea/
+/target/
+/out/
 *.iml
+/README.md
 META-INF/MANIFEST.MF
