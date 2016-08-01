@@ -50,6 +50,6 @@ public class ConsoleTest {
                 "   | Existing tables for DB 'test'|\n" +
                 "   |==============================|\n" +
                 "1. | address                      |\n" +
-                "2. | user                         |\n", outContent.toString());
+                "2. | user                         |\n", outContent.toString().replaceAll("\r\n", "\n"));
     }
 }
