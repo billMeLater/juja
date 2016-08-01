@@ -3,3 +3,4 @@ target
 out
 *.iml
 META-INF/MANIFEST.MF
+test
