@@ -1,32 +1,41 @@
 package ua.com.juja.vadim.sqlcmd.model;
 
+import ua.com.juja.vadim.sqlcmd.controller.Command;
+
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 public interface DatabaseManager {
-    List connect(String params);
+    List connect(DatabaseManager databaseManager, List params);
 
-    List disconnect(String params);
+    List disconnect(DatabaseManager databaseManager);
 
-    List exit(String params);
+    void exit(DatabaseManager databaseManager);
 
-    List createTable(String params);
+    List help(DatabaseManager databaseManager);
 
-    List dropTable(String params);
+    List createTable(DatabaseManager databaseManager, List params);
 
-    List showTables(String params);
+    List dropTable(DatabaseManager databaseManager, List params);
 
-    List addRecord(String params);
+    List clearTable(DatabaseManager databaseManager, List params);
 
-    List removeRecord(String params);
+    List showTables(DatabaseManager databaseManager);
 
-    List showRecords(String table);
+    List addRecord(DatabaseManager databaseManager, List params);
 
-    List _usage(String methodName, String parameter, String info);
+//    List updateRecord(String params);
+//
+//    List removeRecord(String params);
+//
+//    List showRecords(String table);
 
-    List _connectionInfo(String string);
+    List _connectionInfo();
 
     boolean _isConnected();
+
+    Map<String, Command> _getCommands();
 
     Connection _getConnection();
 }
