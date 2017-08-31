@@ -1,26 +1,27 @@
-package ua.com.juja.vadim.sqlcmd.model;
+package ua.com.juja.vadim.sqlcmd.model.MySQLDatabaseManagerTest;
 
 import org.junit.Test;
 import org.mockito.Mockito;
+import ua.com.juja.vadim.sqlcmd.controller.Command;
+import ua.com.juja.vadim.sqlcmd.controller.command.Connect;
+import ua.com.juja.vadim.sqlcmd.controller.command.Disconnect;
+import ua.com.juja.vadim.sqlcmd.model.DatabaseManager;
+import ua.com.juja.vadim.sqlcmd.model.MySQLDatabaseManager;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class MySQLDatabaseManagerTest {
-    private static final String DB_NAME = "juja";
-    private static final String DB_USER = "jujauser";
-    private static final String DB_PASS = "password";
-    private static final String TEMP_TABLE = "sqlcmd_test";
+public class TableCRUDTest {
+    private Info connectionData = new Info();
+    private Command connect = new Connect();
+    private Command disconnect = new Disconnect();
+    private List param = new ArrayList();
+    private List result = new ArrayList();
 
-    DatabaseManager manager = new MySQLDatabaseManager();
-    DatabaseManager test = Mockito.mock(manager.getClass());
+
 
 //    @Test
 //    public void connection() {
@@ -46,7 +47,7 @@ public class MySQLDatabaseManagerTest {
 //
 //        param = "";
 //        result = new ArrayList(1);
-//        result.add("Connection does not exist. Connect to DB first.");
+//        result.add("ConnectTest does not exist. Connect to DB first.");
 //        when(test.disconnect(param)).thenReturn(result);
 //        assertEquals(test.disconnect(param), manager.disconnect(param));
 //
@@ -59,14 +60,14 @@ public class MySQLDatabaseManagerTest {
 //
 //        param = DB_NAME + "|" + DB_USER + "|wrong";
 //        result = new ArrayList(2);
-//        result.add("Connection to DB '" + DB_NAME + "' failed!");
+//        result.add("ConnectTest to DB '" + DB_NAME + "' failed!");
 //        result.add("Access denied for user '" + DB_USER + "'@'localhost' (using password: YES)");
 //        when(test.connect(param)).thenReturn(result);
 //        assertEquals(test.connect(param), manager.connect(param));
 //
 //        param = DB_NAME + "|" + DB_USER + "|" + DB_PASS;
 //        result = new ArrayList(1);
-//        result.add("Connection to DB '" + DB_NAME + "' established");
+//        result.add("ConnectTest to DB '" + DB_NAME + "' established");
 //        when(test.connect(param)).thenReturn(result);
 //        assertEquals(test.connect(param), manager.connect(param));
 //
@@ -79,7 +80,7 @@ public class MySQLDatabaseManagerTest {
 //        assertEquals(test._isConnected(), manager._isConnected());
 //
 //        result = new ArrayList(1);
-//        result.add("Connection closed");
+//        result.add("ConnectTest closed");
 //        when(test.disconnect("")).thenReturn(result);
 //        assertEquals(test.disconnect(""), manager.disconnect(""));
 //
@@ -195,7 +196,7 @@ public class MySQLDatabaseManagerTest {
 //        when(test.removeRecord(param)).thenReturn(result);
 //        assertEquals(test.removeRecord(param), manager.removeRecord(param));
 //
-//        Connection connection = manager._getConnection();
+//        ConnectTest connection = manager._getConnection();
 //        try (Statement stmt = connection.createStatement()) {
 //            String sql = "CREATE TEMPORARY TABLE " + TEMP_TABLE +
 //                    "(id INTEGER not NULL, " +
