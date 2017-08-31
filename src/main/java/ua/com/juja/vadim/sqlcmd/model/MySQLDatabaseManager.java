@@ -1,6 +1,7 @@
 package ua.com.juja.vadim.sqlcmd.model;
 
 import com.mysql.fabric.jdbc.FabricMySQLDriver;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import ua.com.juja.vadim.sqlcmd.controller.Command;
 import ua.com.juja.vadim.sqlcmd.controller.command.*;
 
@@ -26,7 +27,6 @@ public class MySQLDatabaseManager implements DatabaseManager {
         this.commands.put("clear", new Clear());
         this.commands.put("help", new Help());
         this.commands.put("exit", new Exit());
-        this.commands.put("insert", new Insert());
     }
 
     public List connect(DatabaseManager databaseManager, List params) {
@@ -175,11 +175,12 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
-    public List addRecord(DatabaseManager databaseManager, List params) {
-        List result = new ArrayList();
-        String tableName = params.get(0).toString();
-        String fields = "";
-        String fieldTypes = "";
+//    public List addRecord(DatabaseManager databaseManager, List params) {
+//        throw new NotImplementedException();
+//        List result = new ArrayList();
+//        String tableName = params.get(0).toString();
+//        String fields = "";
+//        String fieldTypes = "";
 
 //        if (_isConnected()) {
 //            if (!params.isEmpty()) {
@@ -188,27 +189,27 @@ public class MySQLDatabaseManager implements DatabaseManager {
 //                    return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
 //                }
 
-        if (databaseManager._isConnected()) {
-            for (int i = 1; i < params.size(); i = i + 1) {
-                fields += params.get(i);
-                fieldTypes += params.get(i) + " VARCHAR(10)";
-                if (i + 1 < params.size()) {
-                    fieldTypes += ", ";
-                    fields += ", ";
-                }
-            }
-            try (Statement stmt = connection.createStatement()) {
-                stmt.executeUpdate("create table " + tableName + "(" + fieldTypes + ")");
-                result.add("table '" + tableName + "' with fields (" + fields + ") created");
-            } catch (SQLException e) {
-                result.add("create table '" + tableName + "' with fields (" + fields + ") - FAILED!");
-                result.add(e.getMessage());
-            }
-        } else {
-            result.add("Connect to DB first");
-        }
-        return result;
-    }
+//        if (databaseManager._isConnected()) {
+//            for (int i = 1; i < params.size(); i = i + 1) {
+//                fields += params.get(i);
+//                fieldTypes += params.get(i) + " VARCHAR(10)";
+//                if (i + 1 < params.size()) {
+//                    fieldTypes += ", ";
+//                    fields += ", ";
+//                }
+//            }
+//            try (Statement stmt = connection.createStatement()) {
+//                stmt.executeUpdate("create table " + tableName + "(" + fieldTypes + ")");
+//                result.add("table '" + tableName + "' with fields (" + fields + ") created");
+//            } catch (SQLException e) {
+//                result.add("create table '" + tableName + "' with fields (" + fields + ") - FAILED!");
+//                result.add(e.getMessage());
+//            }
+//        } else {
+//            result.add("Connect to DB first");
+//        }
+//        return result;
+//    }
 
 //    @Override
 //    public List removeRecord(String params) {

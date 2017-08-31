@@ -23,8 +23,8 @@ public interface DatabaseManager {
 
     List showTables(DatabaseManager databaseManager);
 
-    List addRecord(DatabaseManager databaseManager, List params);
-
+//    List addRecord(DatabaseManager databaseManager, List params);
+//
 //    List updateRecord(String params);
 //
 //    List removeRecord(String params);
