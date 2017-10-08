@@ -9,18 +9,19 @@ import java.util.List;
 public class Insert extends Command {
 
     public Insert() {
-        this.name = "insert";
-        this.INFO = "\tInsert record into table 'tableName' with 'column'='value' pairs."
+        name = "insert";
+        info = "\tInsert record into table 'tableName' with 'column'='value' pairs."
                 + " 'tableName' or 'column' can't be empty.";
-        this.DEFAULT_PARAM = "|tableName|column1|value1|...|columnN|valueN";
+        defaultParam = "|tableName|column1|value1|...|columnN|valueN";
     }
 
     @Override
-    public List execute(DatabaseManager databaseManager, List params) {
-        if (this.validatedParams(params, DEFAULT_PARAM, true)) {
-            return databaseManager.connect(databaseManager, params);
+    public CommandOutput execute(DatabaseManager databaseManager, List params) {
+        if (this.validatedParams(params, defaultParam, true)) {
+            return databaseManager.addRecord(databaseManager, params);
+        } else {
+            return this._usage();
         }
-        return this._usage();
     }
 
 }

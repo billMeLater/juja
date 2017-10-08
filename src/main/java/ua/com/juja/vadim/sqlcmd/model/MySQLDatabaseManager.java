@@ -1,43 +1,46 @@
 package ua.com.juja.vadim.sqlcmd.model;
 
 import com.mysql.fabric.jdbc.FabricMySQLDriver;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import ua.com.juja.vadim.sqlcmd.controller.Command;
 import ua.com.juja.vadim.sqlcmd.controller.command.*;
 
 import java.sql.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class MySQLDatabaseManager implements DatabaseManager {
     private Connection connection;
-    private String DBNAME;
-    private String DBUSER;
+    private String dbName;
+    private String dbUser;
     private Map<String, Command> commands;
 
     public MySQLDatabaseManager() {
-        DBNAME = "";
-        DBUSER = "";
-        this.commands = new HashMap<>();
-        this.commands.put("connect", new Connect());
-        this.commands.put("disconnect", new Disconnect());
-        this.commands.put("tables", new Tables());
-        this.commands.put("create", new CreateTable());
-        this.commands.put("drop", new Drop());
-        this.commands.put("clear", new Clear());
-        this.commands.put("help", new Help());
-        this.commands.put("exit", new Exit());
+        dbName = "";
+        dbUser = "";
+        commands = new HashMap<>();
+        commands.put("connect", new Connect());
+        commands.put("disconnect", new Disconnect());
+        commands.put("tables", new ShowTables());
+        commands.put("create", new CreateTable());
+        commands.put("drop", new DropTable());
+        commands.put("clear", new ClearTable());
+        commands.put("insert", new Insert());
+        commands.put("help", new Help());
+        commands.put("exit", new Exit());
     }
 
-    public List connect(DatabaseManager databaseManager, List params) {
+    public CommandOutput connect(DatabaseManager databaseManager, List params) {
         String dbName = params.get(0).toString();
         String dbUser = params.get(1).toString();
         String dbPass = params.get(2).toString();
 
         final String DBURL = "jdbc:mysql://localhost:3306/" + dbName + "?useSSL=false";
 
-        List<String> result = new ArrayList<>();
-        if (databaseManager._isConnected() && this.DBNAME.equals(dbName) && this.DBUSER.equals(dbUser)) {
+        CommandOutput result = new CommandOutput();
+        if (databaseManager._isConnected() && this.dbName.equals(dbName) && this.dbUser.equals(dbUser)) {
             result.add("Already connected to DB '" + dbName + "' as '" + dbUser + "'");
         } else {
             try {
@@ -46,8 +49,8 @@ public class MySQLDatabaseManager implements DatabaseManager {
                 ((MySQLDatabaseManager) databaseManager).setConnection(DriverManager.getConnection(DBURL, dbUser, dbPass));
 
                 if (!databaseManager._getConnection().isClosed()) {
-                    this.DBNAME = dbName;
-                    this.DBUSER = dbUser;
+                    this.dbName = dbName;
+                    this.dbUser = dbUser;
                     result.add("Connection to DB '" + dbName + "' established");
                 } else {
                     result.add("Connection to DB '" + dbName + "' failed!");
@@ -59,9 +62,8 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
-    public List disconnect(DatabaseManager databaseManager) {
-        List<String> result = new ArrayList<>();
-
+    public CommandOutput disconnect(DatabaseManager databaseManager) {
+        CommandOutput result = new CommandOutput();
         if (databaseManager._isConnected()) {
             try {
                 databaseManager._getConnection().close();
@@ -72,8 +74,8 @@ public class MySQLDatabaseManager implements DatabaseManager {
         } else {
             result.add("Connection does not exist. Connect to DB first.");
         }
-        this.DBNAME = "";
-        this.DBUSER = "";
+        this.dbName = "";
+        this.dbUser = "";
         return result;
     }
 
@@ -82,27 +84,27 @@ public class MySQLDatabaseManager implements DatabaseManager {
         System.exit(0);
     }
 
-    public List help(DatabaseManager databaseManager) {
-        List<String> result = new ArrayList<>();
+    public CommandOutput help(DatabaseManager databaseManager) {
+        CommandOutput result = new CommandOutput();
         for (Command command : this.commands.values()) {
             result.add(command._info());
         }
         return result;
     }
 
-    public List createTable(DatabaseManager databaseManager, List params) {
-        List result = new ArrayList();
+    public CommandOutput createTable(DatabaseManager databaseManager, List params) {
+        CommandOutput result = new CommandOutput();
         String tableName = params.get(0).toString();
-        String fields = "";
-        String fieldTypes = "";
+        StringBuilder fields = new StringBuilder();
+        StringBuilder fieldTypes = new StringBuilder();
 
         if (databaseManager._isConnected()) {
-            for (int i = 1; i < params.size(); i = i + 1) {
-                fields += params.get(i);
-                fieldTypes += params.get(i) + " VARCHAR(10)";
+            for (int i = 1; i < params.size(); i++) {
+                fields.append(params.get(i));
+                fieldTypes.append(params.get(i)).append(" VARCHAR(10)");
                 if (i + 1 < params.size()) {
-                    fieldTypes += ", ";
-                    fields += ", ";
+                    fieldTypes.append(", ");
+                    fields.append(", ");
                 }
             }
             try (Statement stmt = connection.createStatement()) {
@@ -118,8 +120,8 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
-    public List dropTable(DatabaseManager databaseManager, List params) {
-        List<String> result = new ArrayList<>();
+    public CommandOutput dropTable(DatabaseManager databaseManager, List params) {
+        CommandOutput result = new CommandOutput();
         if (databaseManager._isConnected()) {
             for (Object tableName : params) {
                 try (Statement stmt = connection.createStatement()) {
@@ -136,8 +138,8 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
-    public List clearTable(DatabaseManager databaseManager, List params) {
-        List<String> result = new ArrayList<>();
+    public CommandOutput clearTable(DatabaseManager databaseManager, List params) {
+        CommandOutput result = new CommandOutput();
         if (databaseManager._isConnected()) {
             for (Object tableName : params) {
                 try (Statement stmt = connection.createStatement()) {
@@ -154,19 +156,47 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
-    public List showTables(DatabaseManager databaseManager) {
-        List result = new ArrayList();
+    public CommandOutput showTables(DatabaseManager databaseManager) {
+        CommandOutput result;
         if (_isConnected()) {
+            result = new CommandOutput(true, new String[]{"Existing tables for DB '" + dbName + "'"}, true);
             try (Statement stmt = connection.createStatement()) {
                 ResultSet rs = stmt.executeQuery("show tables");
-                result.add("_drawTable_");
-                result.add(true);
-                result.add(true);
-                result.add(new String[]{"Existing tables for DB '" + DBNAME + "'"});
                 while (rs.next()) {
-                    result.add(new String[]{rs.getString(1)});
+                    result.add(rs.getString(1));
                 }
             } catch (SQLException e) {
+                result.add(e.getMessage());
+            }
+        } else {
+            result = new CommandOutput();
+            result.add("Connect to DB first");
+        }
+        return result;
+    }
+
+    public CommandOutput addRecord(DatabaseManager databaseManager, List params) {
+        String tableName = params.get(0).toString();
+        StringBuilder fields = new StringBuilder();
+        StringBuilder fieldValues = new StringBuilder();
+
+        CommandOutput result = new CommandOutput();
+
+        if (databaseManager._isConnected()) {
+            for (int i = 1; i < params.size() - 1; i = i + 2) {
+                fields.append(params.get(i));
+                fieldValues.append("\"" + params.get(i + 1) + "\"");
+                if (i + 2 < params.size()) {
+                    fields.append(", ");
+                    fieldValues.append(", ");
+                }
+            }
+            try (Statement stmt = connection.createStatement()) {
+                System.out.println("insert into " + tableName + "(" + fields + ") values(" + fieldValues + ")");
+                stmt.executeUpdate("insert into " + tableName + "(" + fields + ") values(" + fieldValues + ")");
+                result.add("data added into table '" + tableName + "'");
+            } catch (SQLException e) {
+                result.add("data insert into table '" + tableName + "' - FAILED!");
                 result.add(e.getMessage());
             }
         } else {
@@ -174,42 +204,6 @@ public class MySQLDatabaseManager implements DatabaseManager {
         }
         return result;
     }
-
-//    public List addRecord(DatabaseManager databaseManager, List params) {
-//        throw new NotImplementedException();
-//        List result = new ArrayList();
-//        String tableName = params.get(0).toString();
-//        String fields = "";
-//        String fieldTypes = "";
-
-//        if (_isConnected()) {
-//            if (!params.isEmpty()) {
-//                String[] parameters = params.split("\\|");
-//                if (parameters.length < 3 || parameters[0].isEmpty() || parameters.length % 2 == 0) {
-//                    return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
-//                }
-
-//        if (databaseManager._isConnected()) {
-//            for (int i = 1; i < params.size(); i = i + 1) {
-//                fields += params.get(i);
-//                fieldTypes += params.get(i) + " VARCHAR(10)";
-//                if (i + 1 < params.size()) {
-//                    fieldTypes += ", ";
-//                    fields += ", ";
-//                }
-//            }
-//            try (Statement stmt = connection.createStatement()) {
-//                stmt.executeUpdate("create table " + tableName + "(" + fieldTypes + ")");
-//                result.add("table '" + tableName + "' with fields (" + fields + ") created");
-//            } catch (SQLException e) {
-//                result.add("create table '" + tableName + "' with fields (" + fields + ") - FAILED!");
-//                result.add(e.getMessage());
-//            }
-//        } else {
-//            result.add("Connect to DB first");
-//        }
-//        return result;
-//    }
 
 //    @Override
 //    public List removeRecord(String params) {
@@ -332,14 +326,14 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return connection;
     }
 
-    public List _connectionInfo() {
-        List result = new ArrayList(1);
-        result.add(DBUSER + "@" + DBNAME + " > ");
+    public CommandOutput _connectionInfo() {
+        CommandOutput result = new CommandOutput();
+        result.add(dbUser + "@" + dbName + " > ");
         return result;
     }
 
     public boolean _isConnected() {
-        if (!DBNAME.isEmpty()) {
+        if (!dbName.isEmpty()) {
             try {
                 if (!connection.isClosed()) {
                     return true;

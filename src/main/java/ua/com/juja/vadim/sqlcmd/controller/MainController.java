@@ -1,6 +1,7 @@
 package ua.com.juja.vadim.sqlcmd.controller;
 
 
+import ua.com.juja.vadim.sqlcmd.controller.command.CommandOutput;
 import ua.com.juja.vadim.sqlcmd.model.DatabaseManager;
 import ua.com.juja.vadim.sqlcmd.view.View;
 
@@ -21,8 +22,9 @@ public class MainController {
     }
 
     public void run() {
-        List hello = new ArrayList(1);
         String helpCommand = "? for help";
+
+        CommandOutput hello = new CommandOutput();
         hello.add("enter a command or " + helpCommand);
         view.write(hello);
 
@@ -42,7 +44,7 @@ public class MainController {
             if (commands.containsKey(userCommand)) {
                 view.write(commands.get(userCommand).execute(databaseManager, tokens));
             } else {
-                List help = new ArrayList(1);
+                CommandOutput help = new CommandOutput();
                 help.add("command not found. (" + helpCommand + ")");
                 view.write(help);
             }

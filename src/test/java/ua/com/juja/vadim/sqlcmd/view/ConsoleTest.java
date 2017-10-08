@@ -31,7 +31,7 @@ public class ConsoleTest {
         List result = new ArrayList(1);
         String param = "hi there";
         result.add(param);
-        view.write(result);
+//        view.write(result);
         assertEquals("\n" + param, outContent.toString());
 
     }
@@ -45,7 +45,7 @@ public class ConsoleTest {
         result.add(new String[]{"Existing tables for DB 'test'"});
         result.add(new String[]{"address"});
         result.add(new String[]{"user"});
-        view.write(result);
+//        view.write(result);
         assertEquals("   _______________________________\n" +
                 "   | Existing tables for DB 'test'|\n" +
                 "   |==============================|\n" +

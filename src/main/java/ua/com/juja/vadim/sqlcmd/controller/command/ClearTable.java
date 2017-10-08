@@ -1,26 +1,23 @@
 package ua.com.juja.vadim.sqlcmd.controller.command;
 
-
 import ua.com.juja.vadim.sqlcmd.controller.Command;
 import ua.com.juja.vadim.sqlcmd.model.DatabaseManager;
 
 import java.util.List;
 
-public class Connect extends Command {
-
-    public Connect() {
-        name = "connect";
-        info = "\tConnect to DB. All parameters mandatory";
-        defaultParam = "|dbName|dbUser|password";
+public class ClearTable extends Command {
+    public ClearTable() {
+        name = "clear";
+        defaultParam = "|tableName";
+        info = "\tRemove all records from 'tableName'";
     }
 
     @Override
     public CommandOutput execute(DatabaseManager databaseManager, List params) {
         if (this.validatedParams(params, defaultParam)) {
-            return databaseManager.connect(databaseManager, params);
+            return databaseManager.clearTable(databaseManager, params);
         } else {
             return this._usage();
         }
     }
-
 }

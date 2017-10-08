@@ -9,12 +9,12 @@ import java.util.List;
 public class Disconnect extends Command {
 
     public Disconnect() {
-        this.name = "disconnect";
-        this.INFO = "\tClose connection to DB";
+        name = "disconnect";
+        info = "\tClose connection to DB";
     }
 
     @Override
-    public List execute(DatabaseManager databaseManager, List params) {
+    public CommandOutput execute(DatabaseManager databaseManager, List params) {
         return databaseManager.disconnect(databaseManager);
     }
 }

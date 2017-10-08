@@ -9,17 +9,18 @@ import java.util.List;
 public class CreateTable extends Command {
 
     public CreateTable() {
-        this.name = "create";
-        this.DEFAULT_PARAM = "|tableName|fieldName1|...|fieldNameN";
-        this.INFO = "\tCreate table 'tableName' with desired fields.";
+        name = "create";
+        defaultParam = "|tableName|fieldName1|...|fieldNameN";
+        info = "\tCreate table 'tableName' with desired fields.";
     }
 
     @Override
-    public List execute(DatabaseManager databaseManager, List params) {
-        if (this.validatedParams(params, DEFAULT_PARAM, true)) {
+    public CommandOutput execute(DatabaseManager databaseManager, List params) {
+        if (this.validatedParams(params, defaultParam, true)) {
             return databaseManager.createTable(databaseManager, params);
+        } else {
+            return this._usage();
         }
-        return this._usage();
     }
 
 }

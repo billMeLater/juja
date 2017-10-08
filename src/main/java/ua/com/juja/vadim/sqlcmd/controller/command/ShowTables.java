@@ -1,19 +1,20 @@
 package ua.com.juja.vadim.sqlcmd.controller.command;
 
 
+import org.apache.commons.lang.ArrayUtils;
 import ua.com.juja.vadim.sqlcmd.controller.Command;
 import ua.com.juja.vadim.sqlcmd.model.DatabaseManager;
 
 import java.util.List;
 
-public class Tables extends Command {
-    public Tables() {
-        this.name = "tables";
-        this.INFO = "\tShow list of existing tables";
+public class ShowTables extends Command {
+    public ShowTables() {
+        name = "tables";
+        info = "\tShow list of existing tables";
     }
 
     @Override
-    public List execute(DatabaseManager databaseManager, List params) {
+    public CommandOutput execute(DatabaseManager databaseManager, List params) {
         return databaseManager.showTables(databaseManager);
     }
 }

@@ -10,12 +10,12 @@ import java.util.List;
 public class Exit extends Command {
     public Exit() {
         this.name = "exit";
-        this.INFO = "\tExit from SQLcmd";
+        this.info = "\tExit from SQLcmd";
     }
 
     @Override
-    public List execute(DatabaseManager databaseManager, List params) {
+    public CommandOutput execute(DatabaseManager databaseManager, List params) {
         databaseManager.exit(databaseManager);
-        return new ArrayList();
+        return new CommandOutput();
     }
 }

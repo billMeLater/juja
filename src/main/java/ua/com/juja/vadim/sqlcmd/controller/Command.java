@@ -1,32 +1,25 @@
 package ua.com.juja.vadim.sqlcmd.controller;
 
+import ua.com.juja.vadim.sqlcmd.controller.command.CommandOutput;
 import ua.com.juja.vadim.sqlcmd.model.DatabaseManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Command {
-
     protected String name;
-    protected String INFO;
-    protected String DEFAULT_PARAM;
-
-    protected Command() {
-        this.name = "command";
-        this.INFO = "doing that";
-        this.DEFAULT_PARAM = "";
-    }
+    protected String info;
+    protected String defaultParam = "";
 
     private String getName() {
         return name;
     }
 
-    private String getINFO() {
-        return INFO;
+    private String getInfo() {
+        return info;
     }
 
-    private String getDEFAULT_PARAM() {
-        return DEFAULT_PARAM;
+    private String getDefaultParam() {
+        return defaultParam;
     }
 
     @Override
@@ -38,14 +31,11 @@ public class Command {
             return false;
         }
         final Command other = (Command) obj;
-        if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
-            return false;
-        }
-        return true;
+        return (this.name == null) ? (other.name == null) : this.name.equals(other.name);
     }
 
-    public List execute(DatabaseManager databaseManager, List params) {
-        return new ArrayList(0);
+    public CommandOutput execute(DatabaseManager databaseManager, List params) {
+        return new CommandOutput();
     }
 
     protected boolean validatedParams(List params, String required) {
@@ -54,23 +44,20 @@ public class Command {
 
     protected boolean validatedParams(List params, String required, Boolean multi) {
         if (multi) {
-            System.out.println(required.split("\\|...\\|", 0));
+            return params.size() >= required.split("\\|...\\|", 0)[0].split("\\|").length - 1;
         }
         return params.size() >= required.split("\\|").length - 1;
     }
 
-    protected List _usage() {
-        List<String> result = new ArrayList<>();
-        result.add("USAGE:");
-        result.add("\t" + this.getName() + this.getDEFAULT_PARAM());
+    protected CommandOutput _usage() {
+        CommandOutput result = new CommandOutput();
+        result.add("USAGE");
+        result.add("\t" + name + defaultParam);
         return result;
     }
 
     public String _info() {
-        List<String> result = new ArrayList<>();
-        result.add(this.getName() + this.getDEFAULT_PARAM());
-        result.add(this.getINFO());
-        return this.getName() + this.DEFAULT_PARAM + " - " + this.INFO;
+        return name + defaultParam + " - " + info;
     }
 
 }
