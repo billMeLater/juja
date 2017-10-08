@@ -12,7 +12,7 @@ public class Help extends Command {
     }
 
     @Override
-    public CommandOutput execute(DatabaseManager databaseManager, List params) {
+    public CommandOutput execute(DatabaseManager databaseManager, List<String> params) {
         return databaseManager.help(databaseManager);
     }
 }

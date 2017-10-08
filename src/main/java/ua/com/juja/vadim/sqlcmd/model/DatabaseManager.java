@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface DatabaseManager {
-    CommandOutput connect(DatabaseManager databaseManager, List params);
+    CommandOutput connect(DatabaseManager databaseManager, List<String> params);
 
     CommandOutput disconnect(DatabaseManager databaseManager);
 
@@ -16,21 +16,21 @@ public interface DatabaseManager {
 
     CommandOutput help(DatabaseManager databaseManager);
 
-    CommandOutput createTable(DatabaseManager databaseManager, List params);
+    CommandOutput createTable(DatabaseManager databaseManager, List<String> params);
 
-    CommandOutput dropTable(DatabaseManager databaseManager, List params);
+    CommandOutput dropTable(DatabaseManager databaseManager, List<String> params);
 
-    CommandOutput clearTable(DatabaseManager databaseManager, List params);
+    CommandOutput clearTable(DatabaseManager databaseManager, List<String> params);
 
     CommandOutput showTables(DatabaseManager databaseManager);
 
-    CommandOutput addRecord(DatabaseManager databaseManager, List params);
+    CommandOutput addRecord(DatabaseManager databaseManager, List<String> params);
 
 //    List updateRecord(String params);
 
 //    List removeRecord(String params);
 
-//    List showRecords(String table);
+    CommandOutput showRecords(DatabaseManager databaseManager, List<String> params);
 
     CommandOutput _connectionInfo();
 

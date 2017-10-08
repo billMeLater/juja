@@ -16,7 +16,7 @@ public class Insert extends Command {
     }
 
     @Override
-    public CommandOutput execute(DatabaseManager databaseManager, List params) {
+    public CommandOutput execute(DatabaseManager databaseManager, List<String> params) {
         if (this.validatedParams(params, defaultParam, true)) {
             return databaseManager.addRecord(databaseManager, params);
         } else {

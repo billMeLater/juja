@@ -48,6 +48,11 @@ public class CommandOutput {
         return true;
     }
 
+    public Boolean add(String[] record) {
+
+        return true;
+    }
+
     public Boolean isTable() {
         return drawTable;
     }

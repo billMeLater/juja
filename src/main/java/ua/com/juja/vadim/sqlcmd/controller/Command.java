@@ -34,7 +34,7 @@ public class Command {
         return (this.name == null) ? (other.name == null) : this.name.equals(other.name);
     }
 
-    public CommandOutput execute(DatabaseManager databaseManager, List params) {
+    public CommandOutput execute(DatabaseManager databaseManager, List<String> params) {
         return new CommandOutput();
     }
 

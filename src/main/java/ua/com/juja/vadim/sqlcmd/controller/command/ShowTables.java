@@ -13,7 +13,7 @@ public class ShowTables extends Command {
     }
 
     @Override
-    public CommandOutput execute(DatabaseManager databaseManager, List params) {
+    public CommandOutput execute(DatabaseManager databaseManager, List<String> params) {
         return databaseManager.showTables(databaseManager);
     }
 }

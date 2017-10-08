@@ -13,7 +13,7 @@ public class DropTable extends Command {
     }
 
     @Override
-    public CommandOutput execute(DatabaseManager databaseManager, List params) {
+    public CommandOutput execute(DatabaseManager databaseManager, List<String> params) {
         if (this.validatedParams(params, defaultParam)) {
             return databaseManager.dropTable(databaseManager, params);
         } else {

@@ -27,15 +27,16 @@ public class MySQLDatabaseManager implements DatabaseManager {
         commands.put("create", new CreateTable());
         commands.put("drop", new DropTable());
         commands.put("clear", new ClearTable());
+        commands.put("find", new ShowRecords());
         commands.put("insert", new Insert());
         commands.put("help", new Help());
         commands.put("exit", new Exit());
     }
 
-    public CommandOutput connect(DatabaseManager databaseManager, List params) {
-        String dbName = params.get(0).toString();
-        String dbUser = params.get(1).toString();
-        String dbPass = params.get(2).toString();
+    public CommandOutput connect(DatabaseManager databaseManager, List<String> params) {
+        String dbName = params.get(0);
+        String dbUser = params.get(1);
+        String dbPass = params.get(2);
 
         final String DBURL = "jdbc:mysql://localhost:3306/" + dbName + "?useSSL=false";
 
@@ -92,9 +93,9 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
-    public CommandOutput createTable(DatabaseManager databaseManager, List params) {
+    public CommandOutput createTable(DatabaseManager databaseManager, List<String> params) {
         CommandOutput result = new CommandOutput();
-        String tableName = params.get(0).toString();
+        String tableName = params.get(0);
         StringBuilder fields = new StringBuilder();
         StringBuilder fieldTypes = new StringBuilder();
 
@@ -120,7 +121,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
-    public CommandOutput dropTable(DatabaseManager databaseManager, List params) {
+    public CommandOutput dropTable(DatabaseManager databaseManager, List<String> params) {
         CommandOutput result = new CommandOutput();
         if (databaseManager._isConnected()) {
             for (Object tableName : params) {
@@ -138,7 +139,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
-    public CommandOutput clearTable(DatabaseManager databaseManager, List params) {
+    public CommandOutput clearTable(DatabaseManager databaseManager, List<String> params) {
         CommandOutput result = new CommandOutput();
         if (databaseManager._isConnected()) {
             for (Object tableName : params) {
@@ -175,8 +176,8 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
-    public CommandOutput addRecord(DatabaseManager databaseManager, List params) {
-        String tableName = params.get(0).toString();
+    public CommandOutput addRecord(DatabaseManager databaseManager, List<String> params) {
+        String tableName = params.get(0);
         StringBuilder fields = new StringBuilder();
         StringBuilder fieldValues = new StringBuilder();
 
@@ -205,7 +206,6 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
-//    @Override
 //    public List removeRecord(String params) {
 //        final String DEFAULT_PARAM = "tableName|fieldName1|value1|...|fieldNameN|valueN";
 //        final String INFO = "\t remove records from table 'tableName' with clause 'fieldName'='value'. "
@@ -250,72 +250,45 @@ public class MySQLDatabaseManager implements DatabaseManager {
 //        }
 //        return result;
 //    }
-//
-//    @Override
-//    public List showRecords(String params) {
-//        final String DEFAULT_PARAM = "tableName|limit|offset";
-//        final String INFO = "\t show records from table 'tableName'. "
-//                + "Limit and offset are natural numbers and not mandatory, safely to skip both or any one";
-//
-//        if (params.equals("_usage")) {
-//            return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
-//        }
-//
-//        List result = new ArrayList();
-//        if (_isConnected()) {
-//            if (!params.isEmpty()) {
-//                String limit = "100";
-//                String offset = "0";
-//
-//                String[] parameters = params.split("\\|");
-//                String tableName = parameters[0];
-//
-//                if (parameters.length == 3) {
-//                    if (!parameters[1].isEmpty()) {
-//                        limit = parameters[1];
-//                    }
-//                    offset = parameters[2];
-//                } else if (parameters.length == 2) {
-//                    limit = parameters[1];
-//                }
-//
-//                try (Statement stmt = connection.createStatement()) {
-//                    ResultSet rs = stmt.executeQuery("select * from " + tableName
-//                            + " order by 1 limit " + limit + " offset " + offset);
-//                    ResultSetMetaData metaData = rs.getMetaData();
-//
-//                    result.add("_drawTable_");
-//                    result.add(true);
-//                    result.add(true);
-//
-//                    int columnCount = metaData.getColumnCount();
-//                    String[] header = new String[columnCount];
-//                    for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-//                        header[columnIndex - 1] = metaData.getColumnName(columnIndex);
-//                    }
-//                    result.add(header);
-//
-//                    while (rs.next()) {
-//                        String[] body = new String[columnCount];
-//                        for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-//                            body[columnIndex - 1] = rs.getString(columnIndex);
-//                        }
-//                        result.add(body);
-//                    }
-//                    return result;
-//                } catch (SQLException e) {
-//                    result.add("Show records for table '" + params + "' failed!");
-//                    result.add(e.getMessage());
-//                    return result;
-//                }
-//            } else {
-//                return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
-//            }
-//        } else {
-//            result.add("Connect to DB first");
-//        }
-//        return result;
-//    }
+
+    public CommandOutput showRecords(DatabaseManager databaseManager, List<String> params) {
+        String tableName = params.get(0);
+        String limit = params.get(1);
+        String offset = params.get(2);
+
+        CommandOutput result;
+        if (databaseManager._isConnected()) {
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery("select * from " + tableName
+                        + " order by 1 limit " + limit + " offset " + offset);
+                ResultSetMetaData metaData = rs.getMetaData();
+
+                int columnCount = metaData.getColumnCount();
+                String[] header = new String[columnCount];
+                for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                    header[columnIndex - 1] = metaData.getColumnName(columnIndex);
+                }
+                result = new CommandOutput(true, header, true);
+                while (rs.next()) {
+                    String[] body = new String[columnCount];
+                    for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                        body[columnIndex - 1] = rs.getString(columnIndex);
+                    }
+                    result.add(body);
+                }
+                return result;
+            } catch (SQLException e) {
+                result = new CommandOutput();
+                result.add("Show records for table '" + tableName + "' failed!");
+                result.add(e.getMessage());
+                return result;
+            }
+        } else {
+            result = new CommandOutput();
+            result.add("Connect to DB first");
+        }
+        return result;
+    }
 
 
     private void setConnection(Connection connection) {

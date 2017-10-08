@@ -15,7 +15,7 @@ public class Connect extends Command {
     }
 
     @Override
-    public CommandOutput execute(DatabaseManager databaseManager, List params) {
+    public CommandOutput execute(DatabaseManager databaseManager, List<String> params) {
         if (this.validatedParams(params, defaultParam)) {
             return databaseManager.connect(databaseManager, params);
         } else {

@@ -13,7 +13,7 @@ public class Exit extends Command {
     }
 
     @Override
-    public CommandOutput execute(DatabaseManager databaseManager, List params) {
+    public CommandOutput execute(DatabaseManager databaseManager, List<String> params) {
         databaseManager.exit(databaseManager);
         return new CommandOutput();
     }
