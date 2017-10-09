@@ -28,7 +28,7 @@ public interface DatabaseManager {
 
 //    List updateRecord(String params);
 
-//    List removeRecord(String params);
+    CommandOutput removeRecords(DatabaseManager databaseManager, List<String> params);
 
     CommandOutput showRecords(DatabaseManager databaseManager, List<String> params);
 

@@ -6,11 +6,11 @@ import ua.com.juja.vadim.sqlcmd.model.DatabaseManager;
 
 import java.util.List;
 
-public class Insert extends Command {
+public class AddRecord extends Command {
 
-    public Insert() {
+    public AddRecord() {
         name = "insert";
-        info = "\tInsert record into table 'tableName' with 'column'='value' pairs."
+        info = "\tAddRecord record into table 'tableName' with 'column'='value' pairs."
                 + " 'tableName' or 'column' can't be empty.";
         defaultParam = "|tableName|column1|value1|...|columnN|valueN";
     }

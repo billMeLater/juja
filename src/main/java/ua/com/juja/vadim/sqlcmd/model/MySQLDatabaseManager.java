@@ -28,11 +28,13 @@ public class MySQLDatabaseManager implements DatabaseManager {
         commands.put("drop", new DropTable());
         commands.put("clear", new ClearTable());
         commands.put("find", new ShowRecords());
-        commands.put("insert", new Insert());
+        commands.put("insert", new AddRecord());
+        commands.put("delete", new RemoveRecords());
         commands.put("help", new Help());
         commands.put("exit", new Exit());
     }
 
+    @Override
     public CommandOutput connect(DatabaseManager databaseManager, List<String> params) {
         String dbName = params.get(0);
         String dbUser = params.get(1);
@@ -63,6 +65,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
+    @Override
     public CommandOutput disconnect(DatabaseManager databaseManager) {
         CommandOutput result = new CommandOutput();
         if (databaseManager._isConnected()) {
@@ -80,11 +83,13 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
+    @Override
     public void exit(DatabaseManager databaseManager) {
         this.disconnect(databaseManager);
         System.exit(0);
     }
 
+    @Override
     public CommandOutput help(DatabaseManager databaseManager) {
         CommandOutput result = new CommandOutput();
         for (Command command : this.commands.values()) {
@@ -93,6 +98,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
+    @Override
     public CommandOutput createTable(DatabaseManager databaseManager, List<String> params) {
         CommandOutput result = new CommandOutput();
         String tableName = params.get(0);
@@ -102,7 +108,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
         if (databaseManager._isConnected()) {
             for (int i = 1; i < params.size(); i++) {
                 fields.append(params.get(i));
-                fieldTypes.append(params.get(i)).append(" VARCHAR(10)");
+                fieldTypes.append(params.get(i)).append(" VARCHAR(50)");
                 if (i + 1 < params.size()) {
                     fieldTypes.append(", ");
                     fields.append(", ");
@@ -121,6 +127,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
+    @Override
     public CommandOutput dropTable(DatabaseManager databaseManager, List<String> params) {
         CommandOutput result = new CommandOutput();
         if (databaseManager._isConnected()) {
@@ -139,6 +146,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
+    @Override
     public CommandOutput clearTable(DatabaseManager databaseManager, List<String> params) {
         CommandOutput result = new CommandOutput();
         if (databaseManager._isConnected()) {
@@ -157,6 +165,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
+    @Override
     public CommandOutput showTables(DatabaseManager databaseManager) {
         CommandOutput result;
         if (_isConnected()) {
@@ -176,6 +185,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
+    @Override
     public CommandOutput addRecord(DatabaseManager databaseManager, List<String> params) {
         String tableName = params.get(0);
         StringBuilder fields = new StringBuilder();
@@ -193,12 +203,10 @@ public class MySQLDatabaseManager implements DatabaseManager {
                 }
             }
             try (Statement stmt = connection.createStatement()) {
-                System.out.println("insert into " + tableName + "(" + fields + ") values(" + fieldValues + ")");
                 stmt.executeUpdate("insert into " + tableName + "(" + fields + ") values(" + fieldValues + ")");
                 result.add("data added into table '" + tableName + "'");
             } catch (SQLException e) {
                 result.add("data insert into table '" + tableName + "' - FAILED!");
-                result.add(e.getMessage());
             }
         } else {
             result.add("Connect to DB first");
@@ -206,51 +214,51 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return result;
     }
 
-//    public List removeRecord(String params) {
-//        final String DEFAULT_PARAM = "tableName|fieldName1|value1|...|fieldNameN|valueN";
-//        final String INFO = "\t remove records from table 'tableName' with clause 'fieldName'='value'. "
-//                + "Use 'removeRecord tableName|*|*' to remove all records from table 'tableName'.";
-//
-//        if (params.equals("_usage")) {
-//            return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
-//        }
-//
-//        List result = new ArrayList();
-//        if (_isConnected()) {
-//            if (!params.isEmpty()) {
-//                String[] parameters = params.split("\\|");
-//                if (parameters.length < 3 || Arrays.asList(parameters).contains("") || parameters.length % 2 == 0) {
-//                    return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
-//                }
-//
-//                String tableName = parameters[0];
-//                String where = "";
-//                if (!(parameters[1].equals("*") && parameters[2].equals("*"))) {
-//                    where += " where ";
-//                    for (int i = 1; i < parameters.length; i = i + 2) {
-//                        where += parameters[i] + "='" + parameters[i + 1] + "'";
-//                        if (i + 2 < parameters.length) {
-//                            where += " and ";
-//                        }
-//                    }
-//                }
-//
-//                try (Statement stmt = connection.createStatement()) {
-//                    stmt.executeUpdate("delete from " + tableName + where);
-//                    result.add("record(s) removed.");
-//                } catch (SQLException e) {
-//                    result.add("removeRecord - FAILED!");
-//                    result.add(e.getMessage());
-//                }
-//            } else {
-//                return _usage(Thread.currentThread().getStackTrace()[1].getMethodName(), DEFAULT_PARAM, INFO);
-//            }
-//        } else {
-//            result.add("Connect to DB first");
-//        }
-//        return result;
-//    }
+    @Override
+    public CommandOutput removeRecords(DatabaseManager databaseManager, List<String> params) {
+        String tableName = params.get(0);
+        StringBuilder where = new StringBuilder(" where ");
 
+        CommandOutput result = new CommandOutput();
+
+        if (databaseManager._isConnected()) {
+
+            for (int i = 1; i < params.size() - 1; i = i + 2) {
+                where.append(params.get(i)).append("='").append(params.get(i + 1)).append("'");
+                if (i + 2 < params.size()) {
+                    where.append(" and ");
+                }
+            }
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery("select * from " + tableName + where + " order by 1");
+                ResultSetMetaData metaData = rs.getMetaData();
+
+                int columnCount = metaData.getColumnCount();
+                String[] header = new String[columnCount];
+                for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                    header[columnIndex - 1] = metaData.getColumnName(columnIndex);
+                }
+                result = new CommandOutput(true, header, true);
+                while (rs.next()) {
+                    String[] body = new String[columnCount];
+                    for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                        body[columnIndex - 1] = rs.getString(columnIndex);
+                    }
+                    result.add(body);
+                }
+                stmt.executeUpdate("delete from " + tableName + where);
+                result.add("above record(s) removed from table '" + tableName + "'");
+            } catch (SQLException e) {
+                result.add("remove record(s) from table '" + tableName + "' - FAILED!");
+            }
+        } else {
+            result = new CommandOutput();
+            result.add("Connect to DB first");
+        }
+        return result;
+    }
+
+    @Override
     public CommandOutput showRecords(DatabaseManager databaseManager, List<String> params) {
         String tableName = params.get(0);
         String limit = params.get(1);
@@ -276,12 +284,10 @@ public class MySQLDatabaseManager implements DatabaseManager {
                     }
                     result.add(body);
                 }
-                return result;
             } catch (SQLException e) {
                 result = new CommandOutput();
                 result.add("Show records for table '" + tableName + "' failed!");
                 result.add(e.getMessage());
-                return result;
             }
         } else {
             result = new CommandOutput();
@@ -289,7 +295,6 @@ public class MySQLDatabaseManager implements DatabaseManager {
         }
         return result;
     }
-
 
     private void setConnection(Connection connection) {
         this.connection = connection;
@@ -299,12 +304,14 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return connection;
     }
 
+    @Override
     public CommandOutput _connectionInfo() {
         CommandOutput result = new CommandOutput();
         result.add(dbUser + "@" + dbName + " > ");
         return result;
     }
 
+    @Override
     public boolean _isConnected() {
         if (!dbName.isEmpty()) {
             try {
@@ -317,6 +324,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
         return false;
     }
 
+    @Override
     public Map<String, Command> _getCommands() {
         return this.commands;
     }

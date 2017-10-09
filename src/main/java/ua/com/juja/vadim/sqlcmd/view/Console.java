@@ -30,7 +30,6 @@ public class Console implements View {
         }
     }
 
-
     @Override
     public String read() {
         Scanner userinput = new Scanner(System.in);

@@ -25,32 +25,38 @@ public class CommandOutput {
         this.rowNumbers = rowNumbers;
     }
 
-    public Boolean add(String record) {
-        Integer xSize = body.length;
-        Integer ySize = 0;
-
-        Object[][] tmpBody;
+    public void add(String record) {
+        int xSize = body.length;
+        int ySize = 1;
 
         if (xSize > 0) {
             ySize = body[0].length;
-            tmpBody = new Object[xSize + 1][ySize];
+        }
 
-            for (int x = 0; x < xSize; x++) {
-                for (int y = 0; y < ySize; y++) {
-                    tmpBody[x][y] = body[x][y];
-                }
-            }
-        } else {
-            tmpBody = new Object[xSize + 1][ySize + 1];
+        Object[][] tmpBody = new Object[xSize + 1][ySize];
+        for (int x = 0; x < xSize; x++) {
+            System.arraycopy(body[x], 0, tmpBody[x], 0, ySize);
         }
         tmpBody[xSize][0] = record;
+
         body = tmpBody;
-        return true;
     }
 
-    public Boolean add(String[] record) {
+    public void add(String[] record) {
+        int xSize = body.length;
+        int ySize = record.length;
 
-        return true;
+        if (xSize > 0) {
+            ySize = body[0].length;
+        }
+
+        Object[][] tmpBody = new Object[xSize + 1][ySize];
+        for (int x = 0; x < xSize; x++) {
+            System.arraycopy(body[x], 0, tmpBody[x], 0, ySize);
+        }
+        System.arraycopy(record, 0, tmpBody[xSize], 0, ySize);
+
+        body = tmpBody;
     }
 
     public Boolean isTable() {

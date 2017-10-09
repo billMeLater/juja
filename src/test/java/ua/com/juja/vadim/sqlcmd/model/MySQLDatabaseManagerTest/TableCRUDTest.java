@@ -105,8 +105,8 @@ public class TableCRUDTest {
 //        result = new ArrayList(2);
 //        result.add("\naddRecord tableName|fieldName1|value1|...|fieldNameN|valueN");
 //        result.add("\t add record into table 'tableName' with 'fieldName'='value' pairs. 'tableName' or 'fieldName' can't be empty.");
-//        when(test.addRecord(param)).thenReturn(result);
-//        assertEquals(test.addRecord(param), manager.addRecord(param));
+//        when(test.AddRecord(param)).thenReturn(result);
+//        assertEquals(test.AddRecord(param), manager.AddRecord(param));
 //
 //        param = "_usage";
 //        result = new ArrayList(2);
@@ -125,8 +125,8 @@ public class TableCRUDTest {
 //        param = TEMP_TABLE + "|1|1";
 //        result = new ArrayList(1);
 //        result.add("Connect to DB first");
-//        when(test.addRecord(param)).thenReturn(result);
-//        assertEquals(test.addRecord(param), manager.addRecord(param));
+//        when(test.AddRecord(param)).thenReturn(result);
+//        assertEquals(test.AddRecord(param), manager.AddRecord(param));
 //
 //        param = TEMP_TABLE + "|1|1";
 //        result = new ArrayList(1);
@@ -155,8 +155,8 @@ public class TableCRUDTest {
 //        result = new ArrayList(2);
 //        result.add("\naddRecord tableName|fieldName1|value1|...|fieldNameN|valueN");
 //        result.add("\t add record into table 'tableName' with 'fieldName'='value' pairs. 'tableName' or 'fieldName' can't be empty.");
-//        when(test.addRecord(param)).thenReturn(result);
-//        assertEquals(test.addRecord(param), manager.addRecord(param));
+//        when(test.AddRecord(param)).thenReturn(result);
+//        assertEquals(test.AddRecord(param), manager.AddRecord(param));
 //
 //        param = "";
 //        result = new ArrayList(2);
@@ -170,8 +170,8 @@ public class TableCRUDTest {
 //        result = new ArrayList(2);
 //        result.add("\naddRecord tableName|fieldName1|value1|...|fieldNameN|valueN");
 //        result.add("\t add record into table 'tableName' with 'fieldName'='value' pairs. 'tableName' or 'fieldName' can't be empty.");
-//        when(test.addRecord(param)).thenReturn(result);
-//        assertEquals(test.addRecord(param), manager.addRecord(param));
+//        when(test.AddRecord(param)).thenReturn(result);
+//        assertEquals(test.AddRecord(param), manager.AddRecord(param));
 //
 //        param = TEMP_TABLE + "|a|b|c";
 //        result = new ArrayList(2);
@@ -185,8 +185,8 @@ public class TableCRUDTest {
 //        result = new ArrayList(2);
 //        result.add("\naddRecord tableName|fieldName1|value1|...|fieldNameN|valueN");
 //        result.add("\t add record into table 'tableName' with 'fieldName'='value' pairs. 'tableName' or 'fieldName' can't be empty.");
-//        when(test.addRecord(param)).thenReturn(result);
-//        assertEquals(test.addRecord(param), manager.addRecord(param));
+//        when(test.AddRecord(param)).thenReturn(result);
+//        assertEquals(test.AddRecord(param), manager.AddRecord(param));
 //
 //        param = TEMP_TABLE + "||b";
 //        result = new ArrayList(2);
@@ -219,21 +219,21 @@ public class TableCRUDTest {
 //        param = TEMP_TABLE + "|id|101|name|TestName101";
 //        result = new ArrayList(2);
 //        result.add("record was added.");
-//        when(test.addRecord(param)).thenReturn(result);
-//        assertEquals(test.addRecord(param), manager.addRecord(param));
+//        when(test.AddRecord(param)).thenReturn(result);
+//        assertEquals(test.AddRecord(param), manager.AddRecord(param));
 //
 //        param = TEMP_TABLE + "|id|111|name|TestName101";
 //        result = new ArrayList(2);
 //        result.add("record was added.");
-//        when(test.addRecord(param)).thenReturn(result);
-//        assertEquals(test.addRecord(param), manager.addRecord(param));
+//        when(test.AddRecord(param)).thenReturn(result);
+//        assertEquals(test.AddRecord(param), manager.AddRecord(param));
 //
 //        param = TEMP_TABLE + "|id1|1";
 //        result = new ArrayList(2);
-//        result.add("addRecord - FAILED!");
+//        result.add("AddRecord - FAILED!");
 //        result.add("Unknown column 'id1' in 'field list'");
-//        when(test.addRecord(param)).thenReturn(result);
-//        assertEquals(test.addRecord(param), manager.addRecord(param));
+//        when(test.AddRecord(param)).thenReturn(result);
+//        assertEquals(test.AddRecord(param), manager.AddRecord(param));
 //
 //        param = TEMP_TABLE + "|id1|1";
 //        result = new ArrayList(2);
