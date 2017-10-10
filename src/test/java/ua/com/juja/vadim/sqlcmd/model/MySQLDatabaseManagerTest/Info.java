@@ -5,30 +5,30 @@ import ua.com.juja.vadim.sqlcmd.model.MySQLDatabaseManager;
 
 public class Info {
     private DatabaseManager manager;
-    private String DB_NAME;
-    private String DB_USER;
-    private String DB_PASS;
+    private String dbName;
+    private String dbUser;
+    private String dbPass;
 
     public Info() {
-        this.manager = new MySQLDatabaseManager();
-        this.DB_NAME = "juja";
-        this.DB_USER = "jujauser";
-        this.DB_PASS = "password";
+        manager = new MySQLDatabaseManager();
+        dbName = "juja";
+        dbUser = "jujauser";
+        dbPass = "password";
     }
 
     public DatabaseManager getManager() {
         return manager;
     }
 
-    public String getDB_NAME() {
-        return DB_NAME;
+    public String getDbName() {
+        return dbName;
     }
 
-    public String getDB_USER() {
-        return DB_USER;
+    public String getDbUser() {
+        return dbUser;
     }
 
-    public String getDB_PASS() {
-        return DB_PASS;
+    public String getDbPass() {
+        return dbPass;
     }
 }

@@ -35,7 +35,7 @@ public class Command {
 
     protected CommandOutput _usage() {
         CommandOutput result = new CommandOutput();
-        result.add("USAGE");
+        result.add("USAGE:");
         result.add("\t" + name + defaultParam);
         return result;
     }
