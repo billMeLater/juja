@@ -9,15 +9,15 @@ import java.util.List;
 public class ShowRecords extends Command {
     public ShowRecords() {
         name = "find";
-        info = "\t show records from table 'tableName'. "
-                + "extended versionL 'find|tableName|limit|offset'. "
-                + "Limit and offset are natural numbers and not mandatory, safely to skip both or any one;";
+        info = "\tshow records from table 'tableName'. "
+                + "Extended version: 'find|tableName|limit|offset'. "
+                + "Limit and offset are natural numbers and not mandatory, safely to skip both or any one";
         defaultParam = "|tableName";
     }
 
     @Override
     public CommandOutput execute(DatabaseManager databaseManager, List<String> params) {
-        if (this.validatedParams(params, defaultParam)) {
+        if (this.validatedParams(params, defaultParam, false)) {
             String defaultLimit = "100";
             String defaultOffset = "0";
 

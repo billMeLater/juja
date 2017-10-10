@@ -10,18 +10,6 @@ public class Command {
     protected String info;
     protected String defaultParam = "";
 
-    private String getName() {
-        return name;
-    }
-
-    private String getInfo() {
-        return info;
-    }
-
-    private String getDefaultParam() {
-        return defaultParam;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -36,10 +24,6 @@ public class Command {
 
     public CommandOutput execute(DatabaseManager databaseManager, List<String> params) {
         return new CommandOutput();
-    }
-
-    protected boolean validatedParams(List params, String required) {
-        return params.size() >= required.split("\\|").length - 1;
     }
 
     protected boolean validatedParams(List params, String required, Boolean multi) {

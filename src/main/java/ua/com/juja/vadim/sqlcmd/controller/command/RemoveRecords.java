@@ -10,7 +10,7 @@ public class RemoveRecords extends Command {
 
     public RemoveRecords() {
         name = "delete";
-        info = "\tRemove record(s) from table 'tableName' with clause 'column'='value' pairs.";
+        info = "\tRemove record(s) from table 'tableName' with clause 'column'='value' pairs";
         defaultParam = "|tableName|column1|value1|...|columnN|valueN";
     }
 

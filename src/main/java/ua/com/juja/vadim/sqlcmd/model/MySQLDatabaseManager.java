@@ -5,22 +5,19 @@ import ua.com.juja.vadim.sqlcmd.controller.Command;
 import ua.com.juja.vadim.sqlcmd.controller.command.*;
 
 import java.sql.*;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class MySQLDatabaseManager implements DatabaseManager {
     private Connection connection;
     private String dbName;
     private String dbUser;
-    private Map<String, Command> commands;
+    private SortedMap<String, Command> commands;
 
     public MySQLDatabaseManager() {
         dbName = "";
         dbUser = "";
-        commands = new HashMap<>();
+        commands = new TreeMap<>();
         commands.put("connect", new Connect());
         commands.put("disconnect", new Disconnect());
         commands.put("tables", new ShowTables());
@@ -30,6 +27,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
         commands.put("find", new ShowRecords());
         commands.put("insert", new AddRecord());
         commands.put("delete", new RemoveRecords());
+        commands.put("update", new UpdateRecords());
         commands.put("help", new Help());
         commands.put("exit", new Exit());
     }
@@ -92,7 +90,7 @@ public class MySQLDatabaseManager implements DatabaseManager {
     @Override
     public CommandOutput help(DatabaseManager databaseManager) {
         CommandOutput result = new CommandOutput();
-        for (Command command : this.commands.values()) {
+        for (Command command : commands.values()) {
             result.add(command._info());
         }
         return result;
@@ -250,6 +248,45 @@ public class MySQLDatabaseManager implements DatabaseManager {
                 result.add("above record(s) removed from table '" + tableName + "'");
             } catch (SQLException e) {
                 result.add("remove record(s) from table '" + tableName + "' - FAILED!");
+            }
+        } else {
+            result = new CommandOutput();
+            result.add("Connect to DB first");
+        }
+        return result;
+    }
+
+    @Override
+    public CommandOutput updateRecords(DatabaseManager databaseManager, List<String> params) {
+        String tableName = params.get(0);
+        StringBuilder where = new StringBuilder(" where ").append(params.get(1)).append("='").append(params.get(2)).append("' ");
+        StringBuilder set = new StringBuilder(" set ").append(params.get(3)).append("='").append(params.get(4)).append("' ");
+
+        CommandOutput result = new CommandOutput();
+
+        if (databaseManager._isConnected()) {
+            try (Statement stmt = connection.createStatement()) {
+                ResultSet rs = stmt.executeQuery("select * from " + tableName + where + " order by 1");
+                ResultSetMetaData metaData = rs.getMetaData();
+
+                int columnCount = metaData.getColumnCount();
+                String[] header = new String[columnCount];
+                for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                    header[columnIndex - 1] = metaData.getColumnName(columnIndex);
+                }
+                result = new CommandOutput(true, header, true);
+                while (rs.next()) {
+                    String[] body = new String[columnCount];
+                    for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                        body[columnIndex - 1] = rs.getString(columnIndex);
+                    }
+                    result.add(body);
+                }
+                stmt.executeUpdate("update " + tableName + set + where);
+                result.add("above record(s) where updated for table '" + tableName + "'");
+            } catch (SQLException e) {
+                System.out.println("update " + tableName + set + where);
+                result.add("update record(s) for table '" + tableName + "' - FAILED!");
             }
         } else {
             result = new CommandOutput();

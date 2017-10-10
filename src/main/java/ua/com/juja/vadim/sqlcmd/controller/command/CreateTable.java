@@ -10,8 +10,8 @@ public class CreateTable extends Command {
 
     public CreateTable() {
         name = "create";
-        defaultParam = "|tableName|fieldName1|...|fieldNameN";
-        info = "\tCreate table 'tableName' with desired fields.";
+        defaultParam = "|tableName|column1|...|columnN";
+        info = "\tCreate table 'tableName' with desired columns";
     }
 
     @Override

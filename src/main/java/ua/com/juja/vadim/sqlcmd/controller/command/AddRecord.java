@@ -10,8 +10,8 @@ public class AddRecord extends Command {
 
     public AddRecord() {
         name = "insert";
-        info = "\tAddRecord record into table 'tableName' with 'column'='value' pairs."
-                + " 'tableName' or 'column' can't be empty.";
+        info = "\tAddRecord record into table 'tableName' with 'column'='value' pairs,"
+                + " 'tableName' or 'column' can't be empty";
         defaultParam = "|tableName|column1|value1|...|columnN|valueN";
     }
 

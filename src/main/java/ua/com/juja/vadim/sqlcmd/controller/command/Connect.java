@@ -16,7 +16,7 @@ public class Connect extends Command {
 
     @Override
     public CommandOutput execute(DatabaseManager databaseManager, List<String> params) {
-        if (this.validatedParams(params, defaultParam)) {
+        if (this.validatedParams(params, defaultParam, false)) {
             return databaseManager.connect(databaseManager, params);
         } else {
             return this._usage();
