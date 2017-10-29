@@ -24,8 +24,8 @@ public class MainServlet extends HttpServlet {
 
         String action = getAction(request);
 
-        if (action.equalsIgnoreCase("/menu")) {
-            request.getRequestDispatcher("menu.jsp").forward(request, response);
+        if (action.equalsIgnoreCase("/")) {
+            request.getRequestDispatcher("main.jsp").forward(request, response);
         } else if (action.equalsIgnoreCase("/connect")) {
             request.getRequestDispatcher("connect.jsp").forward(request, response);
         } else {
