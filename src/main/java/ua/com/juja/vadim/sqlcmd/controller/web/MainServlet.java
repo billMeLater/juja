@@ -1,15 +1,23 @@
 package ua.com.juja.vadim.sqlcmd.controller.web;
 
+import ua.com.juja.vadim.sqlcmd.controller.command.CommandOutput;
+import ua.com.juja.vadim.sqlcmd.model.DatabaseManager;
+import ua.com.juja.vadim.sqlcmd.model.MySQLDatabaseManager;
 import ua.com.juja.vadim.sqlcmd.service.Service;
 import ua.com.juja.vadim.sqlcmd.service.ServiceImpl;
+import ua.com.juja.vadim.sqlcmd.view.Console;
+import ua.com.juja.vadim.sqlcmd.view.View;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainServlet extends HttpServlet {
+    DatabaseManager databaseManager = new MySQLDatabaseManager();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -27,16 +35,18 @@ public class MainServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        View view = new Console();
         Service service = new ServiceImpl();
         String action = getAction(request);
+        List<String> params = new ArrayList<>();
 
         if (action.equalsIgnoreCase("/connect")) {
-            String dbName = request.getParameter("dbName");
-            String dbUser = request.getParameter("dbUser");
-            String dbPass = request.getParameter("dbPass");
+            params.add(request.getParameter("dbName"));
+            params.add(request.getParameter("dbUser"));
+            params.add(request.getParameter("dbPass"));
 
             try {
-                service.connect(dbName, dbUser, dbPass);
+                view.write(service.connect(databaseManager, params));
             } catch (Exception e) {
                 throw e;
             }

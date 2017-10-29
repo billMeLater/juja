@@ -1,17 +1,19 @@
 package ua.com.juja.vadim.sqlcmd.service;
 
+import ua.com.juja.vadim.sqlcmd.controller.command.CommandOutput;
+import ua.com.juja.vadim.sqlcmd.model.DatabaseManager;
+
 import java.util.List;
 
-public class ServiceImpl implements Service{
+public class ServiceImpl implements Service {
     @Override
     public List<String> commandsList() {
         return null;
     }
 
     @Override
-    public void connect(String dbName, String dbUser, String dbPass) {
-
-        return;
+    public CommandOutput connect(DatabaseManager databaseManager, List<String> params) {
+        return databaseManager.connect(databaseManager, params);
     }
 
 
