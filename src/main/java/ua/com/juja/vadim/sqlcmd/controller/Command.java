@@ -2,6 +2,9 @@ package ua.com.juja.vadim.sqlcmd.controller;
 
 import ua.com.juja.vadim.sqlcmd.controller.command.CommandOutput;
 import ua.com.juja.vadim.sqlcmd.model.DatabaseManager;
+import ua.com.juja.vadim.sqlcmd.validator.DBname;
+import ua.com.juja.vadim.sqlcmd.validator.DBuser;
+import ua.com.juja.vadim.sqlcmd.validator.DBpass;
 
 import java.util.List;
 

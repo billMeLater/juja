@@ -4,6 +4,8 @@
     <title>SQLcmd</title>
 </head>
 <body>
-hello world
+hello world<li>
+<a href="connect.jsp">connect</a>
+</li>
 </body>
 </html>

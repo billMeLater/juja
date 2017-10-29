@@ -7,4 +7,12 @@ public class ServiceImpl implements Service{
     public List<String> commandsList() {
         return null;
     }
+
+    @Override
+    public void connect(String dbName, String dbUser, String dbPass) {
+
+        return;
+    }
+
+
 }
