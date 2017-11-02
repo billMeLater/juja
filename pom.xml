@@ -12,6 +12,9 @@
     <name>sqlcmd</name>
     <description>sqlcmd</description>
 
+    <properties>
+        <org.springframework.version>4.3.12.RELEASE</org.springframework.version>
+    </properties>
 
     <build>
         <finalName>${project.artifactId}</finalName>
@@ -43,6 +46,16 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${org.springframework.version}</version>
+        </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
