@@ -1,6 +1,7 @@
 package ua.vadim.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,7 @@ import ua.vadim.services.MessageService;
 public class MainController {
 
     @Autowired
+    @Qualifier("simon")
     private MessageService service;
 
     @RequestMapping(method = RequestMethod.GET)
